@@ -1,0 +1,8 @@
+.idea/
+*.class
+logs/
+.idea/.gitignore
+*.iml
+.gitignore
+/.idea/libraries/
+/.idea/
