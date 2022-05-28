@@ -4,9 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springcms.utils.RabbitUtils;
 import org.springcms.utils.RedisUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -33,9 +31,15 @@ public class DemoController {
     @GetMapping("/rabbit")
     @ApiOperation(value = "rabbit")
     public String rabbit() {
-        rabbitUtils.send("alarm", "{\"sites\":{\"site\":[{\"id\":\"1\",\"name\":\"菜鸟教程\",\"url\":\"www.runoob.com\"},{\"id\":\"2\",\"name\":\"菜鸟工具\",\"url\":\"c.runoob.com\"},{\"id\":\"3\",\"name\":\"Google\",\"url\":\"www.google.com\"}]}}");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        redisUtils.set("cms:demo:index", sdf.format(new Date()), 1000L);
+        rabbitUtils.send("error", "{\"sites\":{\"site\":[{\"id\":\"1\",\"name\":\"菜鸟教程\",\"url\":\"www.runoob.com\"},{\"id\":\"2\",\"name\":\"菜鸟工具\",\"url\":\"c.runoob.com\"},{\"id\":\"3\",\"name\":\"Google\",\"url\":\"www.google.com\"}]}}");
+        return "ok";
+    }
+
+    @GetMapping("/rabbit/{source}")
+    @ApiOperation(value = "rabbit")
+    public String rabbit2(@PathVariable String source, @RequestParam String body) {
+        rabbitUtils.create(source);
+        rabbitUtils.send(source, body);
         return "ok";
     }
 }

@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springcms.vo.QueueVO;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,8 @@ public class RabbitUtils implements RabbitTemplate.ConfirmCallback {
 
     @Resource
     private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private RabbitAdmin rabbitAdmin;
 
     /**
      * 向RabbitMQ发送消息
@@ -54,10 +59,22 @@ public class RabbitUtils implements RabbitTemplate.ConfirmCallback {
 
         rabbitTemplate.setConfirmCallback(this);
         try {
-            rabbitTemplate.convertAndSend("topic_queue_exchange_".concat(queue.getSource()), String.format("topic.queue.%s.update", queue.getSource()), jsonObject.toString(), correlationId);
+            rabbitTemplate.convertAndSend("topic.queue.exchange.".concat(queue.getSource()), String.format("topic.queue.%s.update", queue.getSource()), jsonObject.toString(), correlationId);
         } catch (Exception e) {
             logger.error(String.format("消息【%s】发送异常，%s", queue.getUuid(), e.getMessage()));
         }
+    }
+
+    /**
+     * 动态创建队列，并绑定到交换机
+     * @param queueName 队列简称
+     */
+    public void create(String queueName) {
+        Queue queue = new Queue(String.format("topic.queue.%s", queueName.toLowerCase()));
+        TopicExchange exchange = new TopicExchange(String.format("topic.queue.exchange.%s", queueName.toLowerCase()));
+        rabbitAdmin.declareQueue(queue);
+        rabbitAdmin.declareExchange(exchange);
+        rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(exchange).with(String.format("topic.queue.%s.#", queueName.toLowerCase())));
     }
 
     @Override
@@ -65,7 +82,7 @@ public class RabbitUtils implements RabbitTemplate.ConfirmCallback {
         String uuid = correlationData.getId();
         if (ack) {
             //发送成功
-            logger.debug(String.format("消息【%s】发送成功", uuid));
+            logger.info(String.format("消息【%s】发送成功", uuid));
         } else {
             logger.error(String.format("消息【%s】发送失败", uuid));
         }

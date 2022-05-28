@@ -8,5 +8,8 @@
 ## cms-redis
 Redis独立模块
 
+## cms-rabbit
+RabbitMQ独立模块
+
 # demo
 演示程序
