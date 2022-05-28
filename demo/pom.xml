@@ -28,6 +28,11 @@
             <artifactId>cms-redis</artifactId>
             <version>${cmsx.project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springcms</groupId>
+            <artifactId>cms-rabbit</artifactId>
+            <version>${cmsx.project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

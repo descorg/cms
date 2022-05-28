@@ -16,6 +16,7 @@
     <modules>
         <module>cms-redis</module>
         <module>cms-core</module>
+        <module>cms-rabbit</module>
     </modules>
 
 </project>
