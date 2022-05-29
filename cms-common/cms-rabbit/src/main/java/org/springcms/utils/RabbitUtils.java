@@ -52,12 +52,21 @@ public class RabbitUtils implements RabbitTemplate.ConfirmCallback {
      * @param queue
      */
     public void send(QueueVO queue) {
+        this.send(queue, this);
+    }
+
+    /**
+     * 向RabbitMQ发送消息
+     * @param queue
+     * @param confirmCallback
+     */
+    public void send(QueueVO queue, RabbitTemplate.ConfirmCallback confirmCallback) {
         CorrelationData correlationId = new CorrelationData(queue.getUuid());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("data", queue.getContent());
         jsonObject.put("uuid", queue.getUuid());
 
-        rabbitTemplate.setConfirmCallback(this);
+        rabbitTemplate.setConfirmCallback(confirmCallback);
         try {
             rabbitTemplate.convertAndSend("topic.queue.exchange.".concat(queue.getSource()), String.format("topic.queue.%s.update", queue.getSource()), jsonObject.toString(), correlationId);
         } catch (Exception e) {
