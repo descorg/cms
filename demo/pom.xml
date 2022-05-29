@@ -24,6 +24,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${spring.cloud.starter.openfeign.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springcms</groupId>
             <artifactId>cms-redis</artifactId>
             <version>${cmsx.project.version}</version>
