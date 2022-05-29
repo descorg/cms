@@ -42,4 +42,10 @@ public class DemoController {
         rabbitUtils.send(source, body);
         return "ok";
     }
+
+    @GetMapping("/login/{uid}")
+    @ApiOperation(value = "login")
+    public String login(@PathVariable Long uid) {
+        return "ok";
+    }
 }
