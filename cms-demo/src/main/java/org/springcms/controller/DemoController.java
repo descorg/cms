@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
-@RequestMapping("/demo")
+@RequestMapping("/test")
 @Api(value = "DemoController", tags = "演示")
 public class DemoController {
 

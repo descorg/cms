@@ -34,7 +34,7 @@
 
     <modules>
         <module>cms-common</module>
-        <module>demo</module>
+        <module>cms-demo</module>
         <module>cms-gateway</module>
     </modules>
 
