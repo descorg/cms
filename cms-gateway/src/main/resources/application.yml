@@ -14,3 +14,7 @@ nacos:
       config:
         data-id: gateway-router
         group: DEFAULT_GROUP
+
+cmsx:
+  secure:
+    skip-url:

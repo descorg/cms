@@ -11,6 +11,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cms-gateway</artifactId>
+    <version>${cmsx.project.version}</version>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!--gateway-->
@@ -45,10 +47,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <groupId>org.springcms</groupId>
+            <artifactId>cms-jwt</artifactId>
+            <version>${cmsx.project.version}</version>
         </dependency>
 
         <dependency>

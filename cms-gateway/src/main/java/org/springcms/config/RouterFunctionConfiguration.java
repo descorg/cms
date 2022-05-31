@@ -2,6 +2,7 @@ package org.springcms.config;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springcms.properties.AuthProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,17 +17,21 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-
+/**
+ * 路由配置信息
+ *
+ * @author Chill
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor
-@EnableConfigurationProperties
-public class GatewayCorsConfiguration {
+@EnableConfigurationProperties({AuthProperties.class})
+public class RouterFunctionConfiguration {
 
     /**
      * 这里为支持的请求头，如果有自定义的header字段请自己添加
      */
-    private static final String ALLOWED_HEADERS = "X-Requested-With, Tenant-Id, Cms-Auth, Content-Type, Authorization, credential, X-XSRF-TOKEN, token, username, client, knfie4j-gateway-request, knife4j-gateway-code, request-origion";
+    private static final String ALLOWED_HEADERS = "X-Requested-With, Tenant-Id, Cmsx-Auth, Content-Type, Authorization, credential, X-XSRF-TOKEN, token, username, client, knfie4j-gateway-request, knife4j-gateway-code, request-origion";
     private static final String ALLOWED_METHODS = "GET,POST,PUT,DELETE,OPTIONS,HEAD";
     private static final String ALLOWED_ORIGIN = "*";
     private static final String ALLOWED_EXPOSE = "*";
@@ -56,4 +61,5 @@ public class GatewayCorsConfiguration {
             return chain.filter(ctx);
         };
     }
+
 }
