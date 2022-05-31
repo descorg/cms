@@ -64,9 +64,8 @@ public class AuthFilter implements GlobalFilter, Ordered {
         }
         //判断 Token 状态
         if (jwtProperties.getState()) {
-            String tenantId = String.valueOf(claims.get(TokenConstant.TENANT_ID));
             String userId = String.valueOf(claims.get(TokenConstant.USER_ID));
-            String accessToken = JwtUtils.getAccessToken(tenantId, userId, token);
+            String accessToken = JwtUtils.getAccessToken(userId, token);
             if (!token.equalsIgnoreCase(accessToken)) {
                 return unAuth(resp, "令牌已失效");
             }

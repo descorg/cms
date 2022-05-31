@@ -2,6 +2,7 @@ package org.springcms.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springcms.jwt.utils.JwtUtils;
 import org.springcms.utils.RabbitUtils;
 import org.springcms.utils.RedisUtils;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,7 @@ public class DemoController {
     @GetMapping("/login/{uid}")
     @ApiOperation(value = "login")
     public String login(@PathVariable Long uid) {
+        JwtUtils.addAccessToken(String.valueOf(uid), "afadfasdfadfsdadfadfadfadf", 600);
         return "ok";
     }
 }

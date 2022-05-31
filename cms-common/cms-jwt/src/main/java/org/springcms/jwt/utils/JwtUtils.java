@@ -67,44 +67,44 @@ public class JwtUtils {
         }
     }
 
-    public static String getAccessToken(String tenantId, String userId, String accessToken) {
-        return String.valueOf(getRedisTemplate().opsForValue().get(getAccessTokenKey(tenantId, userId, accessToken)));
+    public static String getAccessToken(String userId, String accessToken) {
+        return String.valueOf(getRedisTemplate().opsForValue().get(getAccessTokenKey(userId, accessToken)));
     }
 
-    public static void addAccessToken(String tenantId, String userId, String accessToken, int expire) {
-        getRedisTemplate().delete(getAccessTokenKey(tenantId, userId, accessToken));
-        getRedisTemplate().opsForValue().set(getAccessTokenKey(tenantId, userId, accessToken), accessToken, expire, TimeUnit.SECONDS);
+    public static void addAccessToken(String userId, String accessToken, int expire) {
+        getRedisTemplate().delete(getAccessTokenKey(userId, accessToken));
+        getRedisTemplate().opsForValue().set(getAccessTokenKey(userId, accessToken), accessToken, expire, TimeUnit.SECONDS);
     }
 
-    public static void removeAccessToken(String tenantId, String userId) {
-        removeAccessToken(tenantId, userId, null);
+    public static void removeAccessToken(String userId) {
+        removeAccessToken(userId, null);
     }
 
-    public static void removeAccessToken(String tenantId, String userId, String accessToken) {
-        getRedisTemplate().delete(getAccessTokenKey(tenantId, userId, accessToken));
+    public static void removeAccessToken(String userId, String accessToken) {
+        getRedisTemplate().delete(getAccessTokenKey(userId, accessToken));
     }
 
-    public static String getAccessTokenKey(String tenantId, String userId, String accessToken) {
-        String key = tenantId.concat(":").concat("cmsx:token").concat("::").concat("token:state:");
+    public static String getAccessTokenKey(String userId, String accessToken) {
+        String key = TOKEN_CACHE.concat("::").concat(TOKEN_KEY);
         if (getJwtProperties().getSingle().booleanValue() || StringUtils.isEmpty(accessToken))
             return key.concat(userId);
         return key.concat(accessToken);
     }
 
-    public static String getRefreshToken(String tenantId, String userId, String refreshToken) {
-        return String.valueOf(getRedisTemplate().opsForValue().get(getRefreshTokenKey(tenantId, userId)));
+    public static String getRefreshToken(String userId, String refreshToken) {
+        return String.valueOf(getRedisTemplate().opsForValue().get(getRefreshTokenKey(userId)));
     }
 
-    public static void addRefreshToken(String tenantId, String userId, String refreshToken, int expire) {
-        getRedisTemplate().delete(getRefreshTokenKey(tenantId, userId));
-        getRedisTemplate().opsForValue().set(getRefreshTokenKey(tenantId, userId), refreshToken, expire, TimeUnit.SECONDS);
+    public static void addRefreshToken(String userId, String refreshToken, int expire) {
+        getRedisTemplate().delete(getRefreshTokenKey(userId));
+        getRedisTemplate().opsForValue().set(getRefreshTokenKey(userId), refreshToken, expire, TimeUnit.SECONDS);
     }
 
-    public static void removeRefreshToken(String tenantId, String userId) {
-        getRedisTemplate().delete(getRefreshTokenKey(tenantId, userId));
+    public static void removeRefreshToken(String userId) {
+        getRedisTemplate().delete(getRefreshTokenKey(userId));
     }
 
-    public static String getRefreshTokenKey(String tenantId, String userId) {
-        return tenantId.concat(":").concat("cmsx:refreshToken").concat("::").concat("token:state:").concat(userId);
+    public static String getRefreshTokenKey(String userId) {
+        return REFRESH_TOKEN_CACHE.concat("::").concat(TOKEN_KEY).concat(userId);
     }
 }
