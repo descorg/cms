@@ -22,8 +22,8 @@
         <maven.compiler.target>8</maven.compiler.target>
         <maven.plugin.version>3.8.1</maven.plugin.version>
 
-        <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
         <spring.cloud.version>Hoxton.SR12</spring.cloud.version>
+        <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
         <spring.cloud.openfeign.core.version>3.1.2</spring.cloud.openfeign.core.version>
         <spring.cloud.starter.openfeign.version>2.2.9.RELEASE</spring.cloud.starter.openfeign.version>
         <spring.platform.version>Cairo-SR8</spring.platform.version>
@@ -72,5 +72,13 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>aliyun-repos</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public/</url>
+        </repository>
+    </repositories>
 
 </project>
