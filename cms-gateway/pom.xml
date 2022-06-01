@@ -79,6 +79,12 @@
             <groupId>org.springcms</groupId>
             <artifactId>cms-jwt</artifactId>
             <version>${cmsx.project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
