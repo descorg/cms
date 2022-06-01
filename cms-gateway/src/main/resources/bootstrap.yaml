@@ -1,5 +1,5 @@
-server:
-  port: 8000
+#server:
+#  port: 8000
 spring:
   application:
     name: cms-gateway
@@ -22,11 +22,18 @@ spring:
           group: DEFAULT_GROUP  # 默认为DEFAULT_GROUP
           refresh: true # 是否动态刷新,默认为false
 # 暴露端点
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-  endpoint:
-    health:
-      show-details: always
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'
+#  endpoint:
+#    health:
+#      show-details: always
+
+nacos:
+  gateway:
+    route:
+      config:
+        data-id: gateway-router
+        group: DEFAULT_GROUP

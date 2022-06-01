@@ -1,20 +1,20 @@
-spring:
-  profiles:
-    active: dev
-  application:
-    name: cms-gateway
-  cloud:
-    nacos:
-      config:
-        server-addr: 127.0.0.1:8848
-        file-extension: yaml
-nacos:
-  gateway:
-    route:
-      config:
-        data-id: gateway-router
-        group: DEFAULT_GROUP
-
-cmsx:
-  secure:
-    skip-url:
+#spring:
+#  profiles:
+#    active: dev
+#  application:
+#    name: cms-gateway
+#  cloud:
+#    nacos:
+#      config:
+#        server-addr: 127.0.0.1:8848
+#        file-extension: yaml
+#nacos:
+#  gateway:
+#    route:
+#      config:
+#        data-id: gateway-router
+#        group: DEFAULT_GROUP
+#
+#cmsx:
+#  secure:
+#    skip-url:
