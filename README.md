@@ -8,6 +8,9 @@
 ## cms-core-launch
 自定义启动器
 
+## cms-jwt
+jwt
+
 ## cms-rabbit
 RabbitMQ独立模块
 
