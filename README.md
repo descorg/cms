@@ -5,11 +5,14 @@
 ## cms-core
 公共库
 
-## cms-redis
-Redis独立模块
+## cms-core-launch
+自定义启动器
 
 ## cms-rabbit
 RabbitMQ独立模块
+
+## cms-redis
+Redis独立模块
 
 # cms-gateway
 网关

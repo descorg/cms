@@ -18,6 +18,7 @@
         <module>cms-core</module>
         <module>cms-rabbit</module>
         <module>cms-jwt</module>
+        <module>cms-core-launch</module>
     </modules>
 
 </project>

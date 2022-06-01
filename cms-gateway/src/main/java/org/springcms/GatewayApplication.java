@@ -1,5 +1,6 @@
 package org.springcms;
 
+import org.springcms.core.launch.CmsApplication;
 import org.springcms.properties.AuthProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +20,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableConfigurationProperties(value = AuthProperties.class)
 public class GatewayApplication {
     public static void main(String[] args) {
-        SpringApplication.run(GatewayApplication.class, args);
+//        SpringApplication.run(GatewayApplication.class, args);
+        CmsApplication.run("cms-gateway", GatewayApplication.class, args);
     }
 }
