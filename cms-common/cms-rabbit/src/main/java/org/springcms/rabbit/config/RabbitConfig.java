@@ -1,4 +1,4 @@
-package org.springcms.config;
+package org.springcms.rabbit.config;
 
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

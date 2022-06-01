@@ -1,8 +1,9 @@
-package org.springcms.utils;
+package org.springcms.rabbit.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springcms.rabbit.event.SendStateListener;
 import org.springcms.vo.QueueVO;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -28,12 +29,14 @@ public class RabbitUtils implements RabbitTemplate.ConfirmCallback {
     @Autowired
     private RabbitAdmin rabbitAdmin;
 
+    private SendStateListener sendStateListener;
+
     /**
      * 向RabbitMQ发送消息
      * @param source
      * @param content 消息内容
      */
-    public void send(String source, String content) {
+    public void send(String source, String content, SendStateListener sendStateListener) {
         String uuid = UUID.randomUUID().toString();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -44,33 +47,33 @@ public class RabbitUtils implements RabbitTemplate.ConfirmCallback {
         queue.setSendTime(sdf.format(new Date()));
         queue.setStatue(QueueVO.QueueStatue.QUEUE_STATUE_NOTSENT.ordinal());
 
-        this.send(queue);
+        this.send(queue, sendStateListener);
     }
 
     /**
      * 向RabbitMQ发送消息
      * @param queue
+     * @param sendStateListener
      */
-    public void send(QueueVO queue) {
-        this.send(queue, this);
-    }
+    public void send(QueueVO queue, SendStateListener sendStateListener) {
+        this.sendStateListener = sendStateListener;
+        if (this.sendStateListener != null) {
+            this.sendStateListener.onBefore(queue);
+        }
 
-    /**
-     * 向RabbitMQ发送消息
-     * @param queue
-     * @param confirmCallback
-     */
-    public void send(QueueVO queue, RabbitTemplate.ConfirmCallback confirmCallback) {
         CorrelationData correlationId = new CorrelationData(queue.getUuid());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("data", queue.getContent());
         jsonObject.put("uuid", queue.getUuid());
 
-        rabbitTemplate.setConfirmCallback(confirmCallback);
+        rabbitTemplate.setConfirmCallback(this);
         try {
             rabbitTemplate.convertAndSend("topic.queue.exchange.".concat(queue.getSource()), String.format("topic.queue.%s.update", queue.getSource()), jsonObject.toString(), correlationId);
         } catch (Exception e) {
             logger.error(String.format("消息【%s】发送异常，%s", queue.getUuid(), e.getMessage()));
+            if (this.sendStateListener != null) {
+                this.sendStateListener.onError(queue.getUuid(), e.getMessage());
+            }
         }
     }
 
@@ -92,8 +95,14 @@ public class RabbitUtils implements RabbitTemplate.ConfirmCallback {
         if (ack) {
             //发送成功
             logger.info(String.format("消息【%s】发送成功", uuid));
+            if (sendStateListener != null) {
+                sendStateListener.onComplete(uuid);
+            }
         } else {
-            logger.error(String.format("消息【%s】发送失败", uuid));
+            logger.error(String.format("消息【%s】发送失败：%s", uuid, cause));
+            if (sendStateListener != null) {
+                sendStateListener.onError(uuid, cause);
+            }
         }
     }
 
