@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>cms-common</artifactId>
+        <groupId>org.springcms</groupId>
+        <version>1.1.1.RELEASE</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>cms-core-mybatis</artifactId>
+    <version>1.1.1.RELEASE</version>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.3.20</version>
+        </dependency>
+        <!--baomidou-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>3.5.2</version>
+        </dependency>
+
+        <!--mysql驱动-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.29</version>
+        </dependency>
+
+        <!--德鲁伊，数据库连接池-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+    </dependencies>
+
+<!--    <build>-->
+<!--        &lt;!&ndash;目的是把src/main/java目录中的xml文件包含到输出结果中，也就是输出到classes目录中&ndash;&gt;-->
+<!--        <resources>-->
+<!--            <resource>-->
+<!--                <directory>src/main/java</directory>&lt;!&ndash;所在的目录&ndash;&gt;-->
+<!--                <includes>&lt;!&ndash;包括目录下的.properties,.xml 文件都会扫描到&ndash;&gt;-->
+<!--                    <include>**/*.properties</include>-->
+<!--                    <include>**/*.xml</include>-->
+<!--                </includes>-->
+<!--                <filtering>false</filtering>-->
+<!--            </resource>-->
+<!--        </resources>-->
+<!--    </build>-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
