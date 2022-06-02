@@ -8,11 +8,13 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableScheduling
 @RefreshScope
+@EnableOpenApi
 @MapperScan(basePackages = {"org.springcms.demo.mapper"})
 @SpringBootApplication(scanBasePackages = {"org.springcms.core", "org.springcms.demo"})
 public class DemoApplication {

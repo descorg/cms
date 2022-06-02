@@ -7,11 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springcms.core.jwt.utils.JwtUtils;
 import org.springcms.core.rabbit.utils.RabbitUtils;
 import org.springcms.core.redis.utils.RedisUtils;
-import org.springcms.demo.entity.Admin;
-import org.springcms.demo.entity.Person;
 import org.springcms.demo.listener.mySendStateListener;
-import org.springcms.demo.service.AdminService;
-import org.springcms.demo.service.PersonService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -28,8 +24,6 @@ public class DemoController {
     RedisUtils redisUtils;
     @Resource
     RabbitUtils rabbitUtils;
-    @Resource
-    PersonService personService;
 
     @GetMapping("/redis")
     @ApiOperation(value = "redis")
@@ -60,19 +54,6 @@ public class DemoController {
     @ApiOperation(value = "login")
     public String login(@PathVariable Long uid) {
         JwtUtils.addAccessToken(String.valueOf(uid), "afadfasdfadfsdadfadfadfadf", 600);
-        return "ok";
-    }
-
-    @GetMapping("/mongo")
-    @ApiOperation(value = "mongo")
-    public String mongo() {
-        Person person = new Person("maomao", 1, 123);
-        Person old = personService.insert(person);
-
-        person = new Person("xianzi", 1, 123);
-        person.setId(old.getId());
-        personService.updateById(person);
-
         return "ok";
     }
 }
