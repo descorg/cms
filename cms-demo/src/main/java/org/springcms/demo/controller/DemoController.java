@@ -26,8 +26,6 @@ public class DemoController {
     RedisUtils redisUtils;
     @Resource
     RabbitUtils rabbitUtils;
-    @Resource
-    AdminService adminService;
 
     @GetMapping("/redis")
     @ApiOperation(value = "redis")
@@ -59,12 +57,5 @@ public class DemoController {
     public String login(@PathVariable Long uid) {
         JwtUtils.addAccessToken(String.valueOf(uid), "afadfasdfadfsdadfadfadfadf", 600);
         return "ok";
-    }
-
-    @GetMapping("/admin/{id}")
-    @ApiOperation(value = "admin")
-    public String admin(@PathVariable Integer id) {
-        Admin admin = adminService.getById(id);
-        return admin.getName();
     }
 }

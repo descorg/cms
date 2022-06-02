@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import org.springcms.core.mybatis.base.CmsXBaseEntity;
 
 /**
  * 系统账号
@@ -14,7 +15,7 @@ import lombok.Data;
  */
 @TableName(value ="cms_admin")
 @Data
-public class Admin implements Serializable {
+public class Admin extends CmsXBaseEntity {
     /**
      * 
      */

@@ -1,9 +1,9 @@
 package org.springcms.demo.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springcms.demo.entity.Admin;
 import org.springcms.demo.service.AdminService;
 import org.springcms.demo.mapper.AdminMapper;
+import org.springcms.core.mybatis.base.CmsXBaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 * @createDate 2022-06-01 21:32:47
 */
 @Service
-public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin>
-    implements AdminService{
+public class AdminServiceImpl extends CmsXBaseServiceImpl<AdminMapper, Admin, Integer> implements AdminService{
 
 }
 

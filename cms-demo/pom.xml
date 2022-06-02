@@ -87,6 +87,12 @@
             <groupId>org.springcms</groupId>
             <artifactId>cms-core-mybatis</artifactId>
             <version>${cmsx.project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

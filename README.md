@@ -8,6 +8,9 @@
 ## cms-core-launch
 自定义启动器
 
+## cms-core-mybatis
+数据库操作基础库
+
 ## cms-jwt
 jwt
 

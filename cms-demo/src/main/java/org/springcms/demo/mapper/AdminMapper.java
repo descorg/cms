@@ -1,7 +1,7 @@
 package org.springcms.demo.mapper;
 
+import org.springcms.core.mybatis.base.CmsXBaseMapper;
 import org.springcms.demo.entity.Admin;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
 * @author Administrator
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2022-06-01 21:32:47
 * @Entity org.springcms.demo.entity.Admin
 */
-public interface AdminMapper extends BaseMapper<Admin> {
+public interface AdminMapper extends CmsXBaseMapper<Admin, Integer> {
 
 }
 
