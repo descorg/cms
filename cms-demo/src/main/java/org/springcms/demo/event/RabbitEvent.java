@@ -1,4 +1,4 @@
-package org.springcms.event;
+package org.springcms.demo.event;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

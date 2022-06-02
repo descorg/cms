@@ -1,4 +1,4 @@
-package org.springcms.controller;
+package org.springcms.demo.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
