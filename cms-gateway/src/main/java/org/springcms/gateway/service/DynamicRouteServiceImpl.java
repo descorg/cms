@@ -1,4 +1,4 @@
-package org.springcms.service;
+package org.springcms.gateway.service;
 
 import com.alibaba.nacos.client.naming.utils.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;

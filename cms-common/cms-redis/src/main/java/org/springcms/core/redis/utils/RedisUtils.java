@@ -1,4 +1,4 @@
-package org.springcms.utils;
+package org.springcms.core.redis.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;

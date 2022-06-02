@@ -1,4 +1,4 @@
-package org.springcms.jwt.constant;
+package org.springcms.core.jwt.constant;
 
 public interface TokenConstant {
     public static final String AVATAR = "avatar";

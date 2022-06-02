@@ -1,4 +1,4 @@
-package org.springcms.jwt.properties;
+package org.springcms.core.jwt.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

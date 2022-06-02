@@ -1,4 +1,4 @@
-package org.springcms.properties;
+package org.springcms.gateway.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,4 +1,4 @@
-package org.springcms.jwt.config;
+package org.springcms.core.jwt.config;
 
 import java.time.Duration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

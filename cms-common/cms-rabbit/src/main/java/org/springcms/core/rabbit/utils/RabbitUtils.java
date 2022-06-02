@@ -1,10 +1,10 @@
-package org.springcms.rabbit.utils;
+package org.springcms.core.rabbit.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springcms.rabbit.event.SendStateListener;
-import org.springcms.vo.QueueVO;
+import org.springcms.core.rabbit.event.SendStateListener;
+import org.springcms.core.vo.QueueVO;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;

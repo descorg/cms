@@ -1,4 +1,4 @@
-package org.springcms.jwt.vo;
+package org.springcms.core.jwt.vo;
 
 import lombok.Data;
 

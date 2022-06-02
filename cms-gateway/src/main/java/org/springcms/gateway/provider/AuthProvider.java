@@ -14,9 +14,9 @@
  *  this software without specific prior written permission.
  *  Author: Chill 庄骞 (smallchill@163.com)
  */
-package org.springcms.provider;
+package org.springcms.gateway.provider;
 
-import org.springcms.jwt.constant.TokenConstant;
+import org.springcms.core.jwt.constant.TokenConstant;
 
 import java.util.ArrayList;
 import java.util.List;

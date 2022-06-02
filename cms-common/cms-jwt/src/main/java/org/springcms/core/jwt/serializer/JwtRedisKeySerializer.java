@@ -1,4 +1,4 @@
-package org.springcms.jwt.serializer;
+package org.springcms.core.jwt.serializer;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

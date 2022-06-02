@@ -1,4 +1,4 @@
-package org.springcms.jwt.utils;
+package org.springcms.core.jwt.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
-import org.springcms.jwt.properties.JwtProperties;
+import org.springcms.core.jwt.properties.JwtProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 

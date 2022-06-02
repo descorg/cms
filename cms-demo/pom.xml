@@ -15,6 +15,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springcms</groupId>
+            <artifactId>cms-core-launch</artifactId>
+            <version>${cmsx.project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-undertow</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
@@ -40,6 +55,10 @@
             <version>0.9.0.RELEASE</version>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springcms</groupId>
             <artifactId>cms-redis</artifactId>
             <version>${cmsx.project.version}</version>
@@ -52,6 +71,21 @@
         <dependency>
             <groupId>org.springcms</groupId>
             <artifactId>cms-jwt</artifactId>
+            <version>${cmsx.project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-redis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springcms</groupId>
+            <artifactId>cms-core-mybatis</artifactId>
             <version>${cmsx.project.version}</version>
         </dependency>
     </dependencies>

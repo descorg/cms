@@ -1,9 +1,9 @@
-package org.springcms.jwt.utils;
+package org.springcms.core.jwt.utils;
 
 import io.jsonwebtoken.Claims;
 import org.apache.commons.lang.StringUtils;
-import org.springcms.jwt.vo.CmsUser;
-import org.springcms.jwt.constant.TokenConstant;
+import org.springcms.core.jwt.constant.TokenConstant;
+import org.springcms.core.jwt.vo.CmsUser;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,9 +1,9 @@
-package org.springcms.handler;
+package org.springcms.gateway.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springcms.provider.ResponseProvider;
+import org.springcms.gateway.provider.ResponseProvider;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBufferFactory;

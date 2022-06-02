@@ -4,12 +4,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springcms.jwt.utils.JwtUtils;
-import org.springcms.rabbit.event.SendStateListener;
-import org.springcms.rabbit.utils.RabbitUtils;
-import org.springcms.utils.RedisUtils;
-import org.springcms.vo.QueueVO;
-import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springcms.core.jwt.utils.JwtUtils;
+import org.springcms.core.rabbit.utils.RabbitUtils;
+import org.springcms.core.redis.utils.RedisUtils;
+import org.springcms.demo.entity.Admin;
+import org.springcms.demo.listener.mySendStateListener;
+import org.springcms.demo.service.AdminService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,6 +26,8 @@ public class DemoController {
     RedisUtils redisUtils;
     @Resource
     RabbitUtils rabbitUtils;
+    @Resource
+    AdminService adminService;
 
     @GetMapping("/redis")
     @ApiOperation(value = "redis")
@@ -59,21 +61,10 @@ public class DemoController {
         return "ok";
     }
 
-    private class mySendStateListener implements SendStateListener {
-
-        @Override
-        public void onBefore(QueueVO queue) {
-            logger.info("发送之前{}", queue);
-        }
-
-        @Override
-        public void onComplete(String uuid) {
-            logger.info("发送完成{}", uuid);
-        }
-
-        @Override
-        public void onError(String uuid, String error) {
-            logger.info("发送出错{}", uuid, error);
-        }
-    };
+    @GetMapping("/admin/{id}")
+    @ApiOperation(value = "admin")
+    public String admin(@PathVariable Integer id) {
+        Admin admin = adminService.getById(id);
+        return admin.getName();
+    }
 }

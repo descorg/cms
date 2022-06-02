@@ -1,8 +1,8 @@
-package org.springcms.config;
+package org.springcms.gateway.config;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springcms.properties.AuthProperties;
+import org.springcms.gateway.properties.AuthProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

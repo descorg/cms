@@ -1,4 +1,4 @@
-package org.springcms.config;
+package org.springcms.core.redis.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

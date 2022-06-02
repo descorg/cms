@@ -1,7 +1,7 @@
-package org.springcms.config;
+package org.springcms.gateway.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springcms.handler.ErrorExceptionHandler;
+import org.springcms.gateway.handler.ErrorExceptionHandler;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;

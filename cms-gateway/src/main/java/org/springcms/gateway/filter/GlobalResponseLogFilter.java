@@ -14,7 +14,7 @@
  *  this software without specific prior written permission.
  *  Author: DreamLu 卢春梦 (596392912@qq.com)
  */
-package org.springcms.filter;
+package org.springcms.gateway.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

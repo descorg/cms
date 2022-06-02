@@ -1,4 +1,4 @@
-package org.springcms.filter;
+package org.springcms.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,13 +6,13 @@ import io.jsonwebtoken.Claims;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springcms.jwt.constant.TokenConstant;
-import org.springcms.properties.AuthProperties;
-import org.springcms.jwt.properties.JwtProperties;
-import org.springcms.jwt.utils.JwtUtils;
-import org.springcms.provider.AuthProvider;
-import org.springcms.provider.RequestProvider;
-import org.springcms.provider.ResponseProvider;
+import org.springcms.gateway.provider.AuthProvider;
+import org.springcms.gateway.provider.RequestProvider;
+import org.springcms.gateway.provider.ResponseProvider;
+import org.springcms.core.jwt.constant.TokenConstant;
+import org.springcms.gateway.properties.AuthProperties;
+import org.springcms.core.jwt.properties.JwtProperties;
+import org.springcms.core.jwt.utils.JwtUtils;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;

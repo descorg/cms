@@ -1,6 +1,6 @@
-package org.springcms.rabbit.event;
+package org.springcms.core.rabbit.event;
 
-import org.springcms.vo.QueueVO;
+import org.springcms.core.vo.QueueVO;
 
 /**
  * 消息向RabbitMQ发送时，对状态进行监听

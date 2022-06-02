@@ -14,15 +14,15 @@
  *  this software without specific prior written permission.
  *  Author: DreamLu 卢春梦 (596392912@qq.com)
  */
-package org.springcms.filter;
+package org.springcms.gateway.filter;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springcms.jwt.utils.JwtUtils;
-import org.springcms.provider.AuthProvider;
-import org.springcms.provider.RequestProvider;
+import org.springcms.core.jwt.utils.JwtUtils;
+import org.springcms.gateway.provider.AuthProvider;
+import org.springcms.gateway.provider.RequestProvider;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;

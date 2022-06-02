@@ -14,7 +14,7 @@
  *  this software without specific prior written permission.
  *  Author: Chill 庄骞 (smallchill@163.com)
  */
-package org.springcms.provider;
+package org.springcms.gateway.provider;
 
 import java.util.HashMap;
 import java.util.Map;

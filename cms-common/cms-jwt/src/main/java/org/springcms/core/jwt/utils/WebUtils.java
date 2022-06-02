@@ -1,4 +1,4 @@
-package org.springcms.jwt.utils;
+package org.springcms.core.jwt.utils;
 
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;

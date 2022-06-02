@@ -1,8 +1,8 @@
-package org.springcms.jwt.config;
+package org.springcms.core.jwt.config;
 
-import org.springcms.jwt.properties.JwtProperties;
-import org.springcms.jwt.serializer.JwtRedisKeySerializer;
-import org.springcms.jwt.utils.JwtUtils;
+import org.springcms.core.jwt.properties.JwtProperties;
+import org.springcms.core.jwt.serializer.JwtRedisKeySerializer;
+import org.springcms.core.jwt.utils.JwtUtils;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

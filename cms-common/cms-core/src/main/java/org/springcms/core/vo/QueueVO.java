@@ -1,4 +1,4 @@
-package org.springcms.vo;
+package org.springcms.core.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

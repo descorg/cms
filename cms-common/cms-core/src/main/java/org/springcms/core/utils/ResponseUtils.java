@@ -1,4 +1,4 @@
-package org.springcms.utils;
+package org.springcms.core.utils;
 
 import lombok.Data;
 

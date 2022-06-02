@@ -1,4 +1,4 @@
-package org.springcms.config;
+package org.springcms.gateway.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
