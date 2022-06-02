@@ -1,12 +1,12 @@
 
-${AnsiColor.BLUE}                                ■■■                              ■      ■　
-${AnsiColor.BLUE}                               ■■ ■■                              ■    ■　　
-${AnsiColor.BLUE}                              ■    ■                               ■  ■　　
-${AnsiColor.BLUE}                              ■          ■■■■■■■      ■■■■■         ■■　　　
-${AnsiColor.BLUE}                              ■          ■  ■  ■     ■■   ■■        ■■　　　
-${AnsiColor.BLUE}                              ■          ■  ■  ■      ■■■■■         ■■　　　
-${AnsiColor.BLUE}                              ■    ■     ■  ■  ■          ■■       ■　■　　
-${AnsiColor.BLUE}                               ■■ ■■     ■  ■  ■     ■■   ■■      ■　　■　　
+${AnsiColor.BLUE}                                ■■■                               ■      ■　
+${AnsiColor.BLUE}                               ■■ ■■                               ■    ■　　
+${AnsiColor.BLUE}                              ■    ■                                ■  ■　　
+${AnsiColor.BLUE}                              ■          ■■■■■■■      ■■■■■          ■■　　　
+${AnsiColor.BLUE}                              ■          ■  ■  ■     ■■   ■■         ■■　　　
+${AnsiColor.BLUE}                              ■          ■  ■  ■      ■■■■■          ■■　　　
+${AnsiColor.BLUE}                              ■    ■     ■  ■  ■          ■■        ■　 ■　　
+${AnsiColor.BLUE}                               ■■ ■■     ■  ■  ■     ■■   ■■       ■　　 ■　　
 ${AnsiColor.BLUE}                                ■■■      ■  ■  ■      ■■■■■       ■      ■　
 
 ${AnsiColor.BLUE}:: CmsX ${cmsx.service.version} :: ${spring.application.name}:${AnsiColor.RED}${cmsx.env}${AnsiColor.BLUE} :: Running SpringBoot ${spring-boot.version} :: ${AnsiColor.BRIGHT_BLACK}
