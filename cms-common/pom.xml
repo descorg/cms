@@ -19,6 +19,7 @@
         <module>cms-rabbit</module>
         <module>cms-jwt</module>
         <module>cms-core-launch</module>
+        <module>cms-core-mongo</module>
         <module>cms-core-mybatis</module>
     </modules>
 
