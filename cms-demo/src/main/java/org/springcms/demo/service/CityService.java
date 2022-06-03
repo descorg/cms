@@ -3,6 +3,9 @@ package org.springcms.demo.service;
 import org.springcms.core.mybatis.base.CmsXBaseService;
 import org.springcms.demo.entity.City;
 import org.springcms.demo.mapper.CityMapper;
+import org.springcms.demo.vo.TreeCityVO;
+
+import java.util.List;
 
 /**
 * @author Administrator
@@ -10,5 +13,5 @@ import org.springcms.demo.mapper.CityMapper;
 * @createDate 2022-06-03 06:40:25
 */
 public interface CityService extends CmsXBaseService<CityMapper, City, Long> {
-
+    List<TreeCityVO> tree(Long pid);
 }

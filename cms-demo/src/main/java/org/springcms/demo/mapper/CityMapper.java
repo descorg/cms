@@ -2,6 +2,9 @@ package org.springcms.demo.mapper;
 
 import org.springcms.core.mybatis.base.CmsXBaseMapper;
 import org.springcms.demo.entity.City;
+import org.springcms.demo.vo.TreeCityVO;
+
+import java.util.List;
 
 /**
 * @author Administrator
@@ -10,7 +13,7 @@ import org.springcms.demo.entity.City;
 * @Entity org.springcms.demo.entity.City
 */
 public interface CityMapper extends CmsXBaseMapper<City, Long> {
-
+    List<TreeCityVO>  queryChilds(Long pid);
 }
 
 

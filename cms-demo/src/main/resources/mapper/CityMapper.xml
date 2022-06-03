@@ -16,9 +16,7 @@
             <result property="status" column="status" jdbcType="TINYINT"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,pid,name,
-        shortname,code,level,
-        longitude,latitude,status
-    </sql>
+    <select id="queryChilds" resultType="org.springcms.demo.vo.TreeCityVO">
+        select a.*,(select count(b.id) from cms_city b where b.pid=a.id) as childrens from cms_city a where pid=#{pid}
+    </select>
 </mapper>
