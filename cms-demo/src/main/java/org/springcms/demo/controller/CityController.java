@@ -1,7 +1,7 @@
 package org.springcms.demo.controller;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import org.springcms.core.mybatis.base.BaseController;
 import org.springcms.demo.entity.City;
 import org.springcms.demo.service.CityService;
@@ -23,7 +23,7 @@ public class CityController extends BaseController<City> {
     CityService cityService;
 
     @GetMapping("/tree/{id}")
-    @ApiModelProperty("树形数据")
+    @ApiOperation(value = "树形数据")
     public R<List<TreeCityVO>> tree(@PathVariable Long id) {
         return R.data(cityService.tree(id), "ok");
     }
