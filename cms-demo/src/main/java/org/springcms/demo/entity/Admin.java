@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
 import java.util.Date;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springcms.core.mybatis.base.CmsXBaseEntity;
 
@@ -20,66 +21,79 @@ public class Admin extends CmsXBaseEntity {
      * 
      */
     @TableId(type = IdType.AUTO)
+    @ApiModelProperty(value = "自增编号", example = "0")
     private Integer id;
 
     /**
      * 登录名
      */
+    @ApiModelProperty(value = "登录名", example = "")
     private String name;
 
     /**
      * 登录密码
      */
+    @ApiModelProperty(value = "登录密码", example = "")
     private String pass;
 
     /**
      * 电子邮箱
      */
+    @ApiModelProperty(value = "电子邮箱", example = "")
     private String email;
 
     /**
-     * 练习电话
+     * 联系电话
      */
+    @ApiModelProperty(value = "联系电话", example = "")
     private String phone;
 
     /**
      * 昵称
      */
+    @ApiModelProperty(value = "昵称", example = "")
     private String nickname;
 
     /**
      * 头像
      */
+    @ApiModelProperty(value = "头像", example = "")
     private String avatar;
 
     /**
      * 所属权限组
      */
+    @ApiModelProperty(value = "所属权限组", example = "0")
     private Integer role;
 
     /**
      * 状态：1=禁用，2=启用，3=锁定
      */
+    @ApiModelProperty(value = "状态：1=禁用，2=启用，3=锁定", example = "0")
     private Integer status;
 
     /**
      * 创建时间
      */
+    @ApiModelProperty(value = "创建时间", example = "")
     private Date time;
 
     /**
      * 登录次数
      */
+    @ApiModelProperty(value = "登录次数", example = "0")
     private Integer loginNums;
 
     /**
      * 连续登陆失败次数
      */
+    @ApiModelProperty(value = "连续登陆失败次数", example = "0")
     private Integer loginFail;
 
     /**
      * 最后登录时间
      */
+    @ApiModelProperty(value = "最后登录时间", example = "")
     private Date lastLoginTime;
 
     @TableField(exist = false)

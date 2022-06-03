@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springcms.core.mybatis.base.CmsXBaseEntity;
 
@@ -17,47 +18,56 @@ public class City extends CmsXBaseEntity<Long> {
     /**
      * 主键
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
+    @ApiModelProperty(value = "主键", example = "0")
     private Long id;
 
     /**
      * 父级id
      */
-    private Integer pid;
+    @ApiModelProperty(value = "父级id", example = "0")
+    private Long pid;
 
     /**
      * 城市名称
      */
+    @ApiModelProperty(value = "城市名称", example = "")
     private String name;
 
     /**
      * 地市简拼
      */
+    @ApiModelProperty(value = "地市简拼", example = "")
     private String shortname;
 
     /**
      * 行政区划编码
      */
+    @ApiModelProperty(value = "行政区划编码", example = "")
     private String code;
 
     /**
      * 区划等级 1-省 2-市 3-区
      */
+    @ApiModelProperty(value = "区划等级 1-省 2-市 3-区", example = "0")
     private Integer level;
 
     /**
      * 经度
      */
+    @ApiModelProperty(value = "经度", example = "")
     private String longitude;
 
     /**
      * 纬度
      */
+    @ApiModelProperty(value = "纬度", example = "")
     private String latitude;
 
     /**
      * 1=禁用，2=启用
      */
+    @ApiModelProperty(value = "状态：1=禁用，2=启用", example = "0")
     private Integer status;
 
     @TableField(exist = false)

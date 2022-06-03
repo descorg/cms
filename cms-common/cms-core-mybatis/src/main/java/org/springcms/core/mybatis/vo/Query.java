@@ -8,10 +8,10 @@ import lombok.Data;
 @ApiModel("分页查询")
 public class Query {
 
-    @ApiModelProperty("当前页码")
+    @ApiModelProperty(value = "当前页码", example = "1")
     private Integer current;
 
-    @ApiModelProperty("每页显示记录条数")
+    @ApiModelProperty(value = "每页显示记录条数", example = "10")
     private Integer size;
 
     public Integer getCurrent() {
