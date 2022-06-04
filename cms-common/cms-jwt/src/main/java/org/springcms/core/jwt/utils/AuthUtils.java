@@ -1,7 +1,6 @@
 package org.springcms.core.jwt.utils;
 
 import io.jsonwebtoken.Claims;
-import org.apache.commons.lang.StringUtils;
 import org.springcms.core.jwt.constant.TokenConstant;
 import org.springcms.core.jwt.vo.CmsUser;
 
@@ -15,14 +14,7 @@ public class AuthUtils {
             return null;
         }
 
-        Object cmsUser = request.getAttribute("_CMS_USER_REQUEST_ATTR_");
-        if (cmsUser == null) {
-            cmsUser = getUser(request);
-            if (cmsUser != null) {
-                request.setAttribute("_CMS_USER_REQUEST_ATTR_", cmsUser);
-            }
-        }
-        return (CmsUser)cmsUser;
+        return getUser(request);
     }
 
     public static CmsUser getUser(HttpServletRequest request) {
@@ -31,33 +23,20 @@ public class AuthUtils {
             return null;
         }
 
-        CmsUser user = new CmsUser();
-        user.setUid(Long.parseLong(String.valueOf(claims.get(TokenConstant.USER_ID))));
-
-        return user;
+        return JwtUtils.getUser(String.valueOf(claims.get(TokenConstant.USER_ID)));
     }
 
     public static Claims getClaims(HttpServletRequest request) {
-        String token, auth = request.getHeader(TokenConstant.HEADER);
-        Claims claims = null;
-        if (auth != null || StringUtils.isEmpty(auth)) {
-            token = JwtUtils.getToken(auth);
-        } else {
-            String parameter = request.getParameter(TokenConstant.HEADER);
-            token = JwtUtils.getToken(parameter);
+        String token = request.getHeader(TokenConstant.HEADER);
+        if (token == null || token.isEmpty()) {
+            token = request.getParameter(TokenConstant.HEADER);
         }
 
-        if (auth != null || StringUtils.isEmpty(token)) {
-            claims = JwtUtils.parseJWT(token);
+        if (token == null || token.isEmpty()) {
+            return null;
         }
 
-        if (claims == null && JwtUtils.getJwtProperties().getState().booleanValue()) {
-            String userId = String.valueOf(claims.get(TokenConstant.USER_ID));
-            String accessToken = JwtUtils.getAccessToken(userId, token);
-            if (!token.equalsIgnoreCase(accessToken)) {
-                return null;
-            }
-        }
+        Claims claims = JwtUtils.parseJWT(token);
         return claims;
     }
 }

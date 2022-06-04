@@ -17,6 +17,13 @@ import org.springcms.core.mybatis.base.CmsXBaseEntity;
 @TableName(value ="cms_admin")
 @Data
 public class Admin extends CmsXBaseEntity {
+    public enum AdminStatue {
+        ADMIN_STATUE_NONE,
+        ADMIN_STATUE_DISABLE,
+        ADMIN_STATUE_ENABLE,
+        ADMIN_STATUE_LOCK,
+    }
+
     /**
      * 
      */

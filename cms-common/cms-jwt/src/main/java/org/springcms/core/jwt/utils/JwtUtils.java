@@ -1,34 +1,24 @@
 package org.springcms.core.jwt.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import io.jsonwebtoken.*;
 
-import io.jsonwebtoken.SignatureAlgorithm;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
 import org.springcms.core.jwt.constant.TokenConstant;
 import org.springcms.core.jwt.properties.JwtProperties;
+import org.springcms.core.jwt.vo.CmsUser;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.StringUtils;
 
 public class JwtUtils {
-    public static String BEARER = "bearer";
 
-    public static Integer AUTH_LENGTH = Integer.valueOf(7);
-
-    public static Integer TOKEN_EXPIRE = 600;
-
-    public static String TOKEN_SECRET = "9f8415f443eaf4023db64e8f1f350afc";
-
-    private static final String REFRESH_TOKEN_CACHE = "cmsx:refreshToken";
+    /**
+     * 有效期30分钟
+     */
+    public static Integer TOKEN_EXPIRE = 30 * 60 * 1000;
 
     private static final String TOKEN_CACHE = "cmsx:token";
-
-    private static final String TOKEN_KEY = "token:state:";
+    private static final String TOKEN_LIST = "cmsx:token:";
 
     private static JwtProperties jwtProperties;
 
@@ -54,10 +44,6 @@ public class JwtUtils {
         }
     }
 
-    public static String getBase64Security() {
-        return Base64.getEncoder().encodeToString(getJwtProperties().getSignKey().getBytes(StandardCharsets.UTF_8));
-    }
-
     /**
      * 生成token
      * @param uid
@@ -72,74 +58,44 @@ public class JwtUtils {
                 .setSubject("CmsX")
                 .setClaims(claims)
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRE))
-                .signWith(SignatureAlgorithm.HS512, TOKEN_SECRET)
+                .signWith(SignatureAlgorithm.HS512, getJwtProperties().getSignKey().getBytes(StandardCharsets.UTF_8))
                 .compact();
     }
 
-    public static String getToken(String auth) {
-        if (auth != null && auth.length() > AUTH_LENGTH.intValue()) {
-            String headStr = auth.substring(0, 6).toLowerCase();
-            if (headStr.compareTo(BEARER) == 0) {
-                auth = auth.substring(7);
-            }
-            return auth;
+    public static Claims parseJWT(String token) {
+        Claims claims = null;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(getJwtProperties().getSignKey().getBytes(StandardCharsets.UTF_8))
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            claims = e.getClaims();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return claims;
+    }
+
+    public static String getAccessToken(String userId) {
+        return String.valueOf(getRedisTemplate().opsForHash().get(TOKEN_CACHE, userId));
+    }
+
+    public static CmsUser getUser(String userId) {
+        Object obj = getRedisTemplate().opsForValue().get(TOKEN_LIST.concat(userId));
+        if (obj != null && obj instanceof CmsUser) {
+            return (CmsUser) obj;
         }
         return null;
     }
 
-    public static Claims parseJWT(String jsonWebToken) {
-        try {
-            return (Claims)Jwts.parserBuilder()
-                    .setSigningKey(Base64.getDecoder().decode(getBase64Security())).build()
-                    .parseClaimsJws(jsonWebToken).getBody();
-        } catch (Exception ex) {
-            return null;
-        }
-    }
-
-    public static String getAccessToken(String userId, String accessToken) {
-        return String.valueOf(getRedisTemplate().opsForValue().get(getAccessTokenKey(userId, accessToken)));
-    }
-
-    public static void addAccessToken(String userId, String accessToken) {
-        addAccessToken(userId, accessToken, TOKEN_EXPIRE);
-    }
-
-    public static void addAccessToken(String userId, String accessToken, int expire) {
-        getRedisTemplate().delete(getAccessTokenKey(userId, accessToken));
-        getRedisTemplate().opsForValue().set(getAccessTokenKey(userId, accessToken), accessToken, expire, TimeUnit.SECONDS);
+    public static void addAccessToken(String userId, String accessToken, CmsUser user) {
+        getRedisTemplate().opsForHash().put(TOKEN_CACHE, userId, accessToken);
+        getRedisTemplate().opsForValue().set(TOKEN_LIST.concat(userId), user);
     }
 
     public static void removeAccessToken(String userId) {
-        removeAccessToken(userId, null);
-    }
-
-    public static void removeAccessToken(String userId, String accessToken) {
-        getRedisTemplate().delete(getAccessTokenKey(userId, accessToken));
-    }
-
-    public static String getAccessTokenKey(String userId, String accessToken) {
-        String key = TOKEN_CACHE.concat("::").concat(TOKEN_KEY);
-        if (getJwtProperties().getSingle().booleanValue() || StringUtils.isEmpty(accessToken)) {
-            return key.concat(userId);
-        }
-        return key.concat(accessToken);
-    }
-
-    public static String getRefreshToken(String userId, String refreshToken) {
-        return String.valueOf(getRedisTemplate().opsForValue().get(getRefreshTokenKey(userId)));
-    }
-
-    public static void addRefreshToken(String userId, String refreshToken, int expire) {
-        getRedisTemplate().delete(getRefreshTokenKey(userId));
-        getRedisTemplate().opsForValue().set(getRefreshTokenKey(userId), refreshToken, expire, TimeUnit.SECONDS);
-    }
-
-    public static void removeRefreshToken(String userId) {
-        getRedisTemplate().delete(getRefreshTokenKey(userId));
-    }
-
-    public static String getRefreshTokenKey(String userId) {
-        return REFRESH_TOKEN_CACHE.concat("::").concat(TOKEN_KEY).concat(userId);
+        getRedisTemplate().opsForHash().delete(TOKEN_CACHE, userId);
+        getRedisTemplate().delete(TOKEN_LIST.concat(userId));
     }
 }

@@ -2,8 +2,12 @@ package org.springcms.core.jwt.vo;
 
 import lombok.Data;
 
-@Data
-public class CmsUser {
+import java.io.Serializable;
 
-    private Long uid;
+@Data
+public class CmsUser implements Serializable {
+
+    private Integer id;
+
+    private String name;
 }

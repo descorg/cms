@@ -3,6 +3,7 @@ package org.springcms.demo.service;
 import org.springcms.core.mybatis.base.CmsXBaseService;
 import org.springcms.demo.entity.Admin;
 import org.springcms.demo.mapper.AdminMapper;
+import org.springcms.demo.vo.LoginVO;
 
 /**
 * @author Administrator
@@ -10,5 +11,5 @@ import org.springcms.demo.mapper.AdminMapper;
 * @createDate 2022-06-01 21:32:47
 */
 public interface AdminService extends CmsXBaseService<AdminMapper, Admin, Integer> {
-
+    LoginVO Login(String name, String pass) throws Exception;
 }

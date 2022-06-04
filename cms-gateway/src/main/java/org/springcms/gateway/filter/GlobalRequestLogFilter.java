@@ -87,8 +87,7 @@ public class GlobalRequestLogFilter implements GlobalFilter, Ordered {
 			beforeReqLog.append("===Headers===  {}: {}\n");
 			beforeReqArgs.add(headerName);
 			if (AuthProvider.AUTH_KEY.toLowerCase().equals(headerName)) {
-				String value = headerValue.get(0);
-				String token = JwtUtils.getToken(value);
+				String token = headerValue.get(0);
 				Claims claims = JwtUtils.parseJWT(token);
 				beforeReqArgs.add((claims == null) ? "" : claims.toString());
 				beforeReqLog.append("===Headers===  {}: {}\n");

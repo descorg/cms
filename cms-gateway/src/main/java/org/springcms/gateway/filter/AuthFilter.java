@@ -56,8 +56,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         if (StringUtils.isBlank(headerToken) && StringUtils.isBlank(paramToken)) {
             return unAuth(resp, "缺失令牌,鉴权失败");
         }
-        String auth = StringUtils.isBlank(headerToken) ? paramToken : headerToken;
-        String token = JwtUtils.getToken(auth);
+        String token = StringUtils.isBlank(headerToken) ? paramToken : headerToken;
         Claims claims = JwtUtils.parseJWT(token);
         if (token == null || claims == null) {
             return unAuth(resp, "请求未授权");
@@ -65,10 +64,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
         //判断 Token 状态
         if (jwtProperties.getState()) {
             String userId = String.valueOf(claims.get(TokenConstant.USER_ID));
-            String accessToken = JwtUtils.getAccessToken(userId, token);
-            if (!token.equalsIgnoreCase(accessToken)) {
-                return unAuth(resp, "令牌已失效");
-            }
+//            String accessToken = JwtUtils.getAccessToken(userId, token);
+//            if (!token.equalsIgnoreCase(accessToken)) {
+//                return unAuth(resp, "令牌已失效");
+//            }
         }
         return chain.filter(exchange);
     }

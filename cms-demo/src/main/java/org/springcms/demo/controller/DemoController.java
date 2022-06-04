@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springcms.core.jwt.utils.JwtUtils;
 import org.springcms.core.rabbit.utils.RabbitUtils;
 import org.springcms.core.redis.utils.RedisUtils;
 import org.springcms.demo.listener.mySendStateListener;
@@ -47,13 +46,6 @@ public class DemoController {
     public String rabbit2(@PathVariable String source, @RequestParam String body) {
         rabbitUtils.create(source);
         rabbitUtils.send(source, body, new mySendStateListener());
-        return "ok";
-    }
-
-    @GetMapping("/login/{uid}")
-    @ApiOperation(value = "login")
-    public String login(@PathVariable Long uid) {
-        JwtUtils.addAccessToken(String.valueOf(uid), "afadfasdfadfsdadfadfadfadf", 600);
         return "ok";
     }
 }
