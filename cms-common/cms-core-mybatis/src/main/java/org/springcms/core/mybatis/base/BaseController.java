@@ -7,13 +7,13 @@ import io.swagger.annotations.ApiOperation;
 import org.springcms.core.mybatis.response.R;
 import org.springcms.core.mybatis.utils.ApplicationContextUtils;
 import org.springcms.core.mybatis.vo.Query;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -27,6 +27,8 @@ public class BaseController<T extends CmsXBaseEntity> {
     @ApiOperation(value = "新增")
     public R<Boolean> insert(@RequestBody T entity) throws Exception {
         CmsXBaseService entityService = getEntityService();
+        entity.setId(null);
+        entity.setCreateTime(new Date());
         if (entityService.save(entity)) {
             return R.success("success");
         } else {
@@ -49,6 +51,7 @@ public class BaseController<T extends CmsXBaseEntity> {
     @ApiOperation(value = "更新")
     public R<Boolean> update(@RequestBody T entity) throws Exception {
         CmsXBaseService entityService = getEntityService();
+        entity.setCreateTime(new Date());
         if (entityService.updateById(entity)) {
             return R.success("success");
         } else {
@@ -68,11 +71,18 @@ public class BaseController<T extends CmsXBaseEntity> {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     @ApiOperation(value = "分页查询")
     public R<IPage<T>> page(T entity, Query query) throws Exception {
+        if (query.getCurrent() == null || query.getCurrent() < 1) {
+            query.setCurrent(1);
+        }
+        if (query.getSize() == null || query.getSize() < 1) {
+            query.setSize(10);
+        }
         CmsXBaseService entityService = getEntityService();
-        IPage<T> pages = entityService.page(new Page<>(query.getCurrent(), query.getSize()), new QueryWrapper(entity));
+        QueryWrapper queryWrapper = getWrapper(entity);
+        IPage<T> pages = entityService.page(new Page<>(query.getCurrent(), query.getSize()), queryWrapper);
         return R.data(pages);
     }
 
@@ -81,9 +91,26 @@ public class BaseController<T extends CmsXBaseEntity> {
      * @return
      */
     protected CmsXBaseService getEntityService() throws Exception {
-        Class<T> tClass = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        CmsXBaseService entityService = (CmsXBaseService)ApplicationContextUtils.getBean(String.format("%sService", tClass.getSimpleName()));
+        CmsXBaseService entityService = (CmsXBaseService) ApplicationContextUtils.getBean(String.format("%sService", getEntityType().getSimpleName()));
         return entityService;
+    }
+
+    protected CmsXBaseWrapper getWrapper(T entity) throws Exception {
+        String packName = entity.getClass().getPackage().getName();
+        String clsName = String.format("%swrapper.%sWrapper", packName.substring(0, packName.length() - "entity".length()), entity.getClass().getSimpleName());
+        try {
+            Class<?> cclass = Class.forName(clsName);
+            Constructor constructor = cclass.getDeclaredConstructor(entity.getClass());
+            return (CmsXBaseWrapper) constructor.newInstance(entity);
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            e.printStackTrace();
+            return new CmsXBaseWrapper(entity);
+        }
+    }
+
+    protected Class<T> getEntityType() {
+        Class<T> tClass = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return tClass;
     }
 
 }
