@@ -1,0 +1,13 @@
+server:
+    port: 7002
+spring:
+    application:
+        name: cms-flow
+    cloud:
+        nacos:
+            discovery:
+                server-addr: 127.0.0.1:8848
+                namespace: 5028e551-4418-4c14-928e-1a8fe455d11a
+            config:
+                server-addr: 127.0.0.1:8848
+                namespace: 5028e551-4418-4c14-928e-1a8fe455d11a

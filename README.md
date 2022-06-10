@@ -23,6 +23,9 @@ RabbitMQ独立模块
 ## cms-redis
 Redis独立模块
 
+# cms-flow
+flowable工作流
+
 # cms-gateway
 网关
 gateway + nacos + hystrix + openfeign
