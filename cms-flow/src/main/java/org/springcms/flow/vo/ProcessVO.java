@@ -17,4 +17,7 @@ public class ProcessVO {
 
     @ApiModelProperty(value = "描述", example = "")
     private String descption;
+
+    @ApiModelProperty(value = "第一个节点处理人", example = "")
+    private String assignee;
 }
