@@ -9,17 +9,12 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>cms-common</artifactId>
+    <artifactId>cms-api</artifactId>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
 
     <modules>
-        <module>cms-redis</module>
-        <module>cms-core</module>
-        <module>cms-jwt</module>
-        <module>cms-core-launch</module>
-        <module>cms-core-mongo</module>
-        <module>cms-core-mybatis</module>
+        <module>cms-rabbit-api</module>
     </modules>
 
 </project>
