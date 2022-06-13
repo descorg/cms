@@ -4,11 +4,34 @@
 # cms-api
 ## cms-rabbit-api
 RabbitMQ独立公共模块。
+
+引入模块
+
+        <dependency>
+            <groupId>org.springcms</groupId>
+            <artifactId>cms-rabbit-api</artifactId>
+            <version>1.1.1.RELEASE</version>
+        </dependency>
+
+修改配置文件
+
+    spring:
+        rabbitmq:
+            host: 127.0.0.1
+            port: 5672
+            username: guest
+            password: guest
+        datasource:
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://127.0.0.1:3306/crm?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+            username: root
+            password: 123456
+
 生产者实例：
 1.Application入口文件需要增加下面注解
 
-@ComponentScan(basePackages = {"org.springcms.rabbit.core", "org.springcms.demo"})
-@MapperScan(basePackages = {"org.springcms.rabbit.core.mapper"})
+    @ComponentScan(basePackages = {"org.springcms.rabbit.core", "org.springcms.demo"})
+    @MapperScan(basePackages = {"org.springcms.rabbit.core.mapper"})
 
 2.发送
 
@@ -25,17 +48,17 @@ RabbitMQ独立公共模块。
         return R.success("ok");
     }
 
-消费者实例，需要增加监听事件。如下
+消费者实例，需要增加监听事件。例一：
 
     @Component
     @Description("监听队列")
-    public class ErrorEvent extends RabbitMessageEvent {
+    public class MyRabbitEvent extends AbstractMessageEvent {
     
         @Override
         @RabbitListener(bindings = @QueueBinding(
-                value = @Queue(value = "topic.queue.error.integral"),
-                exchange = @Exchange(value = "topic.queue.exchange.error", type = ExchangeTypes.TOPIC),
-                key = "topic.queue.error.update"
+                value = @Queue(value = "topic.queue.order.integral"),
+                exchange = @Exchange(value = "topic.queue.exchange.order", type = ExchangeTypes.TOPIC),
+                key = "topic.queue.order.update"
         ))
         public void onMessage(String content) {
             super.onMessage(content);
@@ -47,6 +70,28 @@ RabbitMQ独立公共模块。
         }
     }
 
+
+例二：
+
+修改配置文件
+
+    rabbit:
+        listener:
+            sender: order
+            receive: integral
+
+监听类
+
+    import org.springcms.rabbit.core.event.SingleMessageEvent;
+    import org.springframework.stereotype.Component;
+    
+    @Component
+    public class MyRabbitEvent extends SingleMessageEvent {
+        @Override
+        public void execute(String content) {
+            System.out.println(content);
+        }
+    }
 
 
 # cms-common

@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public abstract class RabbitMessageEvent<T> {
+public abstract class AbstractMessageEvent {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private MqConsumer consumer;
@@ -50,7 +50,7 @@ public abstract class RabbitMessageEvent<T> {
         }
     }
 
-    public abstract void execute(String content);
+    public abstract void execute(String content) throws Exception;
 
     /**
      * 开始执行前
