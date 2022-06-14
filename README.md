@@ -23,7 +23,7 @@ RabbitMQ独立公共模块。
             password: guest
         datasource:
             driver-class-name: com.mysql.cj.jdbc.Driver
-            url: jdbc:mysql://127.0.0.1:3306/crm?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+            url: jdbc:mysql://127.0.0.1:3306/crm?useSSL=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&tinyInt1isBit=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
             username: root
             password: 123456
 
@@ -122,6 +122,10 @@ gateway + nacos + hystrix + openfeign
 
 # cms-rabbit
 Rabbit模块，查询收发记录
+
+# cms-report
+报表工具
+
 
 参考: 
 

@@ -39,6 +39,7 @@
         <module>cms-gateway</module>
         <module>cms-flow</module>
         <module>cms-rabbit</module>
+        <module>cms-report</module>
     </modules>
 
 
