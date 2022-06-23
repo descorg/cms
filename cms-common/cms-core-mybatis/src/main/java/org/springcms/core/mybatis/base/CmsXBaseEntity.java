@@ -16,7 +16,7 @@ import java.util.Date;
 public class CmsXBaseEntity<K> {
 
     @ApiModelProperty(value = "主键", example = "0")
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.AUTO)
     private K id;
 
     @ApiModelProperty(value = "创建时间", example = "")
