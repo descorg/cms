@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>开发工具</title>
+    <!-- Bootstrap -->
+    <link href="/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/build/css/custom.min.css" rel="stylesheet">
+</head>
+<body style="background: #F7F7F7;">
+
+<div class="row">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2> <small></small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+                <!-- Smart Wizard -->
+                <p></p>
+                <div id="wizard" class="form_wizard wizard_horizontal">
+                    <ul class="wizard_steps">
+                        <li>
+                            <a href="#step-1">
+                                <span class="step_no">1</span>
+                                <span class="step_descr">
+                                              Step 1<br />
+                                              <small>字段设置</small>
+                                          </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#step-2">
+                                <span class="step_no">2</span>
+                                <span class="step_descr">
+                                              Step 2<br />
+                                              <small>表设置</small>
+                                          </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div id="step-1">
+                        <form id="form1" class="form-horizontal form-label-left">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <h2>字段列表 <small></small></h2>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <button type="button" class="btn btn-success" onclick="doAdd();"><i class="fa fa-plus"></i> 添加</button>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+
+                                        <table id="table1" class="table table-hover table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>字段名</th>
+                                                <th style="width:120px;">字段类型</th>
+                                                <th style="width:120px;">字段长度</th>
+                                                <th style="text-align:center;width:60px;">小数点</th>
+                                                <th style="text-align:center;width:70px;">不能为空</th>
+                                                <th style="text-align:center;width:60px;">主键</th>
+                                                <th>默认值</th>
+                                                <th>注释</th>
+                                                <th style="text-align:center;width:70px;">操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="item : ${fieldList}">
+                                                <input type="hidden" name="id" th:value="${item.id}"/>
+                                                <td><input type="text" name="name" class="form-control" th:value="${item.name}"/></td>
+                                                <td>
+                                                    <select name="type" class="form-control">
+                                                        <option value="int" th:selected="${item.type eq 'int'}">int</option>
+                                                        <option value="bigint" th:selected="${item.type eq 'bigint'}">bigint</option>
+                                                        <option value="tinyint" th:selected="${item.type eq 'tinyint'}">tinyint</option>
+                                                        <option value="smallint" th:selected="${item.type eq 'smallint'}">smallint</option>
+                                                        <option value="float" th:selected="${item.type eq 'float'}">float</option>
+                                                        <option value="double" th:selected="${item.type eq 'double'}">double</option>
+                                                        <option value="decimal" th:selected="${item.type eq 'decimal'}">decimal</option>
+                                                        <option value="char" th:selected="${item.type eq 'char'}">char</option>
+                                                        <option value="varchar" th:selected="${item.type eq 'varchar'}">varchar</option>
+                                                        <option value="text" th:selected="${item.type eq 'text'}">text</option>
+                                                        <option value="smalltext" th:selected="${item.type eq 'smalltext'}">smalltext</option>
+                                                        <option value="tinytext" th:selected="${item.type eq 'tinytext'}">tinytext</option>
+                                                        <option value="longtext" th:selected="${item.type eq 'longtext'}">longtext</option>
+                                                        <option value="datetime" th:selected="${item.type eq 'datetime'}">datetime</option>
+                                                        <option value="date" th:selected="${item.type eq 'date'}">date</option>
+                                                        <option value="time" th:selected="${item.type eq 'time'}">time</option>
+                                                        <option value="year" th:selected="${item.type eq 'year'}">year</option>
+                                                        <option value="timestamp" th:selected="${item.type eq 'timestamp'}">timestamp</option>
+                                                        <option value="binary" th:selected="${item.type eq 'binary'}">binary</option>
+                                                        <option value="blob" th:selected="${item.type eq 'blob'}">blob</option>
+                                                    </select>
+                                                </td>
+                                                <td><input type="text" name="length" class="form-control" th:value="${item.length}"/></td>
+                                                <td style="text-align:center;"><input type="text" name="decimal" class="form-control" th:value="${item.decimal}"/></td>
+                                                <td style="text-align:center;"><input type="checkbox" name="isNull" class="" th:checked="${!item.isNull}" value="1"/></td>
+                                                <td style="text-align:center;"><input type="checkbox" name="isPk" class="" th:checked="${item.isPk}" value="1"/></td>
+                                                <td><input type="text" name="value" class="form-control" th:value="${item.value}"/></td>
+                                                <td><input type="text" name="description" class="form-control" th:value="${item.description}"/></td>
+                                                <td style="text-align:center;">
+                                                    <a href="javascript:;" onclick="doUp(this);"><i class="fa fa-angle-up"></i></a> &nbsp;
+                                                    <a href="javascript:;" onclick="doDown(this);"><i class="fa fa-angle-down"></i></a>&nbsp;
+                                                    <a href="javascript:;" onclick="doDelete(this);"><i class="fa fa-trash-o"></i></a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <div id="step-2">
+                        <form id="form2" class="form-horizontal form-label-left">
+                            <input type="hidden" name="id" th:value="${table.id}"/>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sourceId">数据源 <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="sourceId" name="sourceId" class="form-control">
+                                        <option th:each="item : ${source}" th:value="${item.id}" th:text="${item.name}" th:selected="${table.sourceId eq item.id}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">表名 <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="name" name="name" th:value="${table.name}" required="required" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="prefix" class="control-label col-md-3 col-sm-3 col-xs-12">表前缀</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="prefix" name="prefix" th:value="${table.prefix}" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12">注释</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="description" name="description" th:value="${table.description}" class="form-control col-md-7 col-xs-12">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="prefix" class="control-label col-md-3 col-sm-3 col-xs-12">是否创建数据库表</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="checkbox" id="execute" name="execute" value="1" checked class="">&nbsp;创建/覆盖
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+                <!-- End SmartWizard Content -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="demo" type="text/x-jquery-tmpl">
+                                            <tr>
+                                                <input type="hidden" name="id" value=""/>
+                                                <td><input type="text" name="name" class="form-control" value=""/></td>
+                                                <td>
+                                                    <select name="type" class="form-control">
+                                                        <option value="int">int</option>
+                                                        <option value="bigint">bigint</option>
+                                                        <option value="tinyint">tinyint</option>
+                                                        <option value="smallint">smallint</option>
+                                                        <option value="float">float</option>
+                                                        <option value="double">double</option>
+                                                        <option value="decimal">decimal</option>
+                                                        <option value="char">char</option>
+                                                        <option value="varchar">varchar</option>
+                                                        <option value="text">text</option>
+                                                        <option value="smalltext">smalltext</option>
+                                                        <option value="tinytext">tinytext</option>
+                                                        <option value="longtext">longtext</option>
+                                                        <option value="datetime">datetime</option>
+                                                        <option value="date">date</option>
+                                                        <option value="time">time</option>
+                                                        <option value="year">year</option>
+                                                        <option value="timestamp">timestamp</option>
+                                                        <option value="binary">binary</option>
+                                                        <option value="blob">blob</option>
+                                                    </select>
+                                                </td>
+                                                <td><input type="text" name="length" class="form-control"/></td>
+                                                <td style="text-align:center;"><input type="text" name="decimal" class="form-control" value=""/></td>
+                                                <td style="text-align:center;"><input type="checkbox" name="isNull" class="" value="1"/></td>
+                                                <td style="text-align:center;"><input type="checkbox" name="isPk" class="" value="1"/></td>
+                                                <td><input type="text" name="value" class="form-control"/></td>
+                                                <td><input type="text" name="description" class="form-control"/></td>
+                                                <td style="text-align:center;">
+                                                    <a href="javascript:;" onclick="doUp(this);"><i class="fa fa-angle-up"></i></a> &nbsp;
+                                                    <a href="javascript:;" onclick="doDown(this);"><i class="fa fa-angle-down"></i></a>&nbsp;
+                                                    <a href="javascript:;" onclick="doDelete(this);"><i class="fa fa-trash-o"></i></a>
+                                                </td>
+                                            </tr>
+</script>
+
+<!-- jQuery -->
+<script src="/vendors/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/vendors/bootstrap/js/bootstrap.min.js"></script>
+<script src="/vendors/jquery/jquery.smartWizard.js"></script>
+<script src="/vendors/jquery/jquery.tmpl.min.js"></script>
+
+<script src="/vendors/layer/layer.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/build/js/custom.js"></script>
+<script src="/build/js/common.js"></script>
+
+<script type="application/javascript">
+    $(document).ready(function() {
+        $('#wizard').smartWizard({
+            onFinish: function() {
+                var fields = [];
+                $.each($("#table1 tbody tr"), function(index, item) {
+                    json = {
+                        id: $(item).find("input[name='id']").val(),
+                        name: $(item).find("input[name='name']").val(),
+                        type: $(item).find("select[name='type']").find("option:selected").text(),
+                        length: $(item).find("input[name='length']").val(),
+                        decimal: $(item).find("input[name='decimal']").val(),
+                        isNull: !$($("input[name='isNull']").get(index)).prop("checked"),
+                        isPk: $($("input[name='isPk']").get(index)).prop("checked"),
+                        value: $(item).find("input[name='value']").val(),
+                        description: $(item).find("input[name='description']").val(),
+                    };
+                    fields.push(json);
+                });
+                var data = {
+                    id: $("#form2 input[name='id']").val(),
+                    sourceId: $("#sourceId").val(),
+                    name: $("#name").val(),
+                    prefix: $("#prefix").val(),
+                    description: $("#description").val(),
+                    execute: $("#execute").prop("checked"),
+                    fields: JSON.stringify(fields),
+                };
+                ajax_post("/table", JSON.stringify(data), function(json) {
+                    if (json.code == 200) {
+                        dlg_url2callback(json.msg, function () {
+                            parent.location.reload();
+                        });
+                    } else {
+                        dlg_error(json.msg);
+                    }
+                });
+            }
+        });
+        $('.buttonNext').addClass('btn btn-success');
+        $('.buttonPrevious').addClass('btn btn-primary');
+        $('.buttonFinish').addClass('btn btn-default');
+    });
+
+    function doAdd() {
+        $("#demo").tmpl().appendTo('#table1 tbody');
+    }
+    function doUp(obj) {
+        var objParentTR = $(obj).parent().parent();
+        var prevTR = objParentTR.prev();
+        if (prevTR.length > 0) {
+            prevTR.insertAfter(objParentTR);
+        }
+    }
+    function doDown(obj) {
+        var objParentTR = $(obj).parent().parent();
+        var nextTR = objParentTR.next();
+        if (nextTR.length > 0) {
+            nextTR.insertBefore(objParentTR);
+        }
+    }
+    function doDelete(obj) {
+        $(obj).parent().parent().remove();
+    }
+</script>
+
+</body>
+</html>

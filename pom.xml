@@ -40,6 +40,7 @@
         <module>cms-flow</module>
         <module>cms-rabbit</module>
         <module>cms-report</module>
+        <module>cms-develop</module>
     </modules>
 
 

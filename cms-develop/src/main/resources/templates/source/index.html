@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>开发工具</title>
+    <!-- Bootstrap -->
+    <link href="/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/build/css/custom.min.css" rel="stylesheet">
+</head>
+
+<body style="background: #F7F7F7;">
+
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>数据源 <small></small></h3>
+            </div>
+
+            <div class="title_right" style="text-align:right;">
+                <button type="button" class="btn btn-success" onclick="doEdit(0);"><i class="fa fa-plus"></i> 添加</button>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="clearfix"></div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="x_content">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th style="width:40px;">#</th>
+                                <th style="width:150px;">名称</th>
+                                <th style="width:300px;">驱动类</th>
+                                <th style="width:150px;">用户名</th>
+                                <th style="width:150px;">数据库名</th>
+                                <th>连接地址</th>
+                                <th style="width:160px;">创建时间</th>
+                                <th style="text-align:center;width:110px;">操作</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr th:each="item : ${list}">
+                                <th scope="row" th:text="${item.id}">#</th>
+                                <td th:text="${item.name}">#</td>
+                                <td th:text="${item.drive}">#</td>
+                                <td th:text="${item.username}">#</td>
+                                <td th:text="${item.database}">#</td>
+                                <td th:text="${item.url}">#</td>
+                                <td th:text="${item.createTime}">#</td>
+                                <td style="text-align:center;">
+                                    <a href="javascript:;" th:onclick="'doEdit(' + ${item.id} + ');'"><i class="fa fa-pencil-square-o"></i> 编辑</a>&nbsp;
+                                    <a href="javascript:;" th:onclick="'doDelete(' + ${item.id} + ');'"><i class="fa fa-trash-o"></i> 删除</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    function doEdit(id) {
+        dlg_open("/source/edit?id=" + id, "添加/编辑数据源");
+    }
+    function doDelete(id) {
+        dlg_delete("/source/" + id, {}, function(json) {
+            if (json.code == 200) {
+                dlg_url2callback(json.msg, function () {
+                   document.location.reload();
+                });
+            } else {
+                dlg_error(json.msg);
+            }
+        });
+    }
+</script>
+
+<!-- jQuery -->
+<script src="/vendors/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/vendors/bootstrap/js/bootstrap.min.js"></script>
+
+<script src="/vendors/layer/layer.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/build/js/custom.min.js"></script>
+<script src="/build/js/common.js"></script>
+</body>
+</html>

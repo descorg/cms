@@ -1,0 +1,19 @@
+server:
+  port: 7001
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/test
+    username: sa
+    password: 123456
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    encoding: UTF-8 #编码
+    suffix: .html #模板后缀
+    mode: HTML #模板
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update

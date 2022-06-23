@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>开发工具</title>
+    <!-- Bootstrap -->
+    <link href="/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/build/css/custom.min.css" rel="stylesheet">
+</head>
+<body style="background: #F7F7F7;">
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2> <small></small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+                <br />
+                <form id="form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <input type="hidden" id="id" name="id" th:value="${source.id}">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">名称 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="name" name="name" th:value="${source.name}" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="drive">驱动类 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="drive" name="drive" class="form-control col-md-7 col-xs-12">
+                                <option value="com.mysql.cj.jdbc.Driver" th:selected="${source.drive eq 'com.mysql.cj.jdbc.Driver'}">com.mysql.cj.jdbc.Driver</option>
+                                <option value="org.postgresql.Driver" th:selected="${source.drive eq 'org.postgresql.Driver'}">org.postgresql.Driver</option>
+                                <option value="oracle.jdbc.OracleDriver" th:selected="${source.drive eq 'oracle.jdbc.OracleDriver'}">oracle.jdbc.OracleDriver</option>
+                                <option value="com.microsoft.sqlserver.jdbc.SQLServerDriver" th:selected="${source.drive eq 'com.microsoft.sqlserver.jdbc.SQLServerDriver'}">com.microsoft.sqlserver.jdbc.SQLServerDriver</option>
+                                <option value="dm.jdbc.driver.DmDriver" th:selected="${source.drive eq 'dm.jdbc.driver.DmDriver'}">dm.jdbc.driver.DmDriver</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="control-label col-md-3 col-sm-3 col-xs-12">用户名 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="username" name="username" th:value="${source.username}" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="control-label col-md-3 col-sm-3 col-xs-12">连接密码 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="password" name="password" th:value="${source.password}" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="database" class="control-label col-md-3 col-sm-3 col-xs-12">数据库名 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="database" name="database" th:value="${source.database}" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="url" class="control-label col-md-3 col-sm-3 col-xs-12">连接地址 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="url" name="url" th:value="${source.url}" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="control-label col-md-3 col-sm-3 col-xs-12">说明</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea id="description" name="description" th:text="${source.description}" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <button class="btn btn-primary" type="button" onclick="parent.layer.closeAll();"><i class="fa fa-close"></i> 关闭</button>
+                            <button type="button" class="btn btn-success" onclick="doSave();"><i class="fa fa-check"></i> 保存</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    function doSave() {
+        var data = {
+            "id": $("#id").val(),
+            "name": $("#name").val(),
+            "drive": $("#drive").val(),
+            "username": $("#username").val(),
+            "password": $("#password").val(),
+            "database": $("#database").val(),
+            "url": $("#url").val(),
+            "description": $("#description").val()
+        };
+        ajax_post("/source", JSON.stringify(data), function (json) {
+            if (json.code == 200) {
+                dlg_url2callback(json.msg, function () {
+                    parent.location.reload();
+                });
+            } else {
+                dlg_error(json.msg);
+            }
+        });
+    }
+</script>
+
+<!-- jQuery -->
+<script src="/vendors/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/vendors/bootstrap/js/bootstrap.min.js"></script>
+
+<script src="/vendors/layer/layer.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/build/js/custom.min.js"></script>
+<script src="/build/js/common.js"></script>
+</body>
+</html>

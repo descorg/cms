@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>开发工具</title>
+    <!-- Bootstrap -->
+    <link href="/vendors/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Custom Theme Style -->
+    <link href="/build/css/custom.min.css" rel="stylesheet">
+</head>
+<body style="background: #F7F7F7;">
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2> <small></small></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="x_content">
+                <br />
+                <form id="form2" data-parsley-validate class="form-horizontal form-label-left">
+                    <input type="hidden" id="id" name="id" th:value="${code.id}">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="entity">类名 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="entity" name="entity" th:value="${code.entity}" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="wrap">包名 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="wrap" name="wrap" th:value="${code.wrap}" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="back" class="control-label col-md-3 col-sm-3 col-xs-12">后端路径 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="back" name="back" th:value="${code.back}" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="front" class="control-label col-md-3 col-sm-3 col-xs-12">前端路径</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="front" name="front" th:value="${code.front}" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <button class="btn btn-primary" type="button" onclick="parent.layer.closeAll();"><i class="fa fa-close"></i> 关闭</button>
+                            <button type="button" class="btn btn-success" onclick="doSave();"><i class="fa fa-check"></i> 保存</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    function doSave() {
+        var data = {
+            "id": $("#id").val(),
+            "entity": $("#entity").val(),
+            "wrap": $("#wrap").val(),
+            "back": $("#back").val(),
+            "front": $("#front").val()
+        };
+        ajax_post("/table/code", JSON.stringify(data), function (json) {
+            if (json.code == 200) {
+                dlg_url2callback(json.msg, function () {
+                    parent.location.reload();
+                });
+            } else {
+                dlg_error(json.msg);
+            }
+        });
+    }
+</script>
+
+<!-- jQuery -->
+<script src="/vendors/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/vendors/bootstrap/js/bootstrap.min.js"></script>
+
+<script src="/vendors/layer/layer.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/build/js/custom.min.js"></script>
+<script src="/build/js/common.js"></script>
+</body>
+</html>
