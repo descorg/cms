@@ -99,10 +99,18 @@ RabbitMQ独立公共模块。
 公共库
 
 ## cms-core-launch
-自定义启动器
+自定义启动器，启动命令改为
+
+    CmsApplication.run("cms-develop", DevelopApplication.class, args);
 
 ## cms-core-mongo
-MongoDb独立操作库
+MongoDb独立操作库，需要增加配置
+
+    spring:
+        data:
+        mongodb:
+            uri: mongodb://localhost:27017/test
+            database: test
 
 ## cms-core-mybatis
 数据库操作基础库

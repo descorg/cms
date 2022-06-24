@@ -10,10 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 public class BaseMongoService<T extends BaseMongoDocument> {
@@ -22,6 +24,9 @@ public class BaseMongoService<T extends BaseMongoDocument> {
     @Lazy
     @Autowired
     MongoOperations mongoOperations;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     public T insert(T entity) {
         return mongoOperations.insert(entity);
@@ -36,15 +41,15 @@ public class BaseMongoService<T extends BaseMongoDocument> {
         return mongoOperations.save(entity);
     }
 
-    public Long deleteByIds(List ids, T entity) {
-        Query query = new Query(Criteria.where("_id").in(ids));
-        DeleteResult result = mongoOperations.remove(query, entity.getClass());
+    public Long deleteByIds(List ids) {
+        Query query = new Query(Criteria.where("id").in(ids));
+        DeleteResult result = mongoOperations.remove(query, getEntityType());
         return result.getDeletedCount();
     }
 
     public Long updateById(T entity) {
         try {
-            Query query = new Query(Criteria.where("_id").is(entity.getId()));
+            Query query = new Query(Criteria.where("id").is(entity.getId()));
 
             entity.setId(null);
             Update update = Update.fromDocument(Document.parse(JSON.toJSONString(entity)));
@@ -57,17 +62,25 @@ public class BaseMongoService<T extends BaseMongoDocument> {
         }
     }
 
-    public T getById(Object id, T entity) {
-        return (T)mongoOperations.findById(id, entity.getClass());
+    public T getById(Object id) {
+        return (T)mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), getEntityType());
     }
 
-    public JSONObject query(T entity, Integer current, Integer size) {
+    public T findOne(String key, Object value) {
+        return (T)mongoTemplate.findOne(new Query(Criteria.where(key).is(value)), getEntityType());
+    }
+
+    public List<T> findAll(String key, Object value) {
+        return mongoTemplate.find(new Query(Criteria.where(key).is(value)), getEntityType());
+    }
+
+    public JSONObject query(Integer current, Integer size) {
         JSONObject jsonObject = null;
         try {
             Query query = new Query().skip((current - 1) * size).limit(size);
 
-            Long total = mongoOperations.count(query, entity.getClass());
-            List<T> entityList = (List<T>) mongoOperations.find(query, entity.getClass());
+            Long total = mongoOperations.count(query, getEntityType());
+            List<T> entityList = mongoOperations.find(query, getEntityType());
 
             jsonObject = new JSONObject();
             jsonObject.put("total", total);
@@ -78,5 +91,10 @@ public class BaseMongoService<T extends BaseMongoDocument> {
             logger.error(e.getMessage());
         }
         return jsonObject;
+    }
+
+    protected Class<T> getEntityType() {
+        Class<T> tClass = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        return tClass;
     }
 }
