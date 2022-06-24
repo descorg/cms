@@ -116,6 +116,10 @@ Redis独立模块
 # cms-develop
 开发者工具
 
+生成的代码所属模块，启动程序需要增加bean的扫描路径，如下所示
+
+    @SpringBootApplication(scanBasePackages = {"org.springcms.core"})
+
 # cms-flow
 flowable工作流
 
