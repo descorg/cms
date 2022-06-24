@@ -37,8 +37,11 @@ public class CodeUtils {
         for (Field field : fieldList) {
             String fieldName = StringUtils.generateClassName(field.getName());
             String property = fieldName.substring(0,1).toLowerCase().concat(fieldName.substring(1));
-            body.append(String.format("\t@ApiModelProperty(value = \"%s\", example = \"%s\")\n", field.getDescription() == null ? "" : field.getDescription(), field.getValue() == null ? "" : field.getValue()));
-            body.append("\t").append("private ").append(dataType2JavaType(field.getType())).append(" ").append(property).append(";\n\n");
+
+            if (!field.getName().equalsIgnoreCase("id") && !field.getName().equalsIgnoreCase("create_time")) {
+                body.append(String.format("\t@ApiModelProperty(value = \"%s\", example = \"%s\")\n", field.getDescription() == null ? "" : field.getDescription(), field.getValue() == null ? "" : field.getValue()));
+                body.append("\t").append("private ").append(dataType2JavaType(field.getType())).append(" ").append(property).append(";\n\n");
+            }
 
             xml.append(String.format("\t\t<result property=\"%s\" column=\"%s\" jdbcType=\"%s\"/>\n", property, field.getName(), dataType2JdbcType(field.getType())));
         }
@@ -88,11 +91,13 @@ public class CodeUtils {
      * @return
      */
     public static String dataType2JavaType(String dataType) {
-        if (dataType.equalsIgnoreCase("tinyint")) {
+        if (dataType.equalsIgnoreCase("bigint")) {
+            return "Long";
+        } else if (dataType.equalsIgnoreCase("tinyint") || dataType.equalsIgnoreCase("int")) {
             return "Integer";
         } else if (dataType.equalsIgnoreCase("decimal")) {
             return "BigDecimal";
-        } else if (dataType.equalsIgnoreCase("datetime")) {
+        } else if (dataType.equalsIgnoreCase("datetime") || dataType.equalsIgnoreCase("timestamp")) {
             return "Date";
         }
         return "String";
