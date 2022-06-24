@@ -87,6 +87,22 @@
     </div>
 </div>
 
+<script id="demo" type="text/x-jquery-tmpl">
+                            <tr>
+                                <td style="text-align:center;"><input type="checkbox" name="id" value="${id}"/></td>
+                                <td>${sourceId}</td>
+                                <td>${name}</td>
+                                <td>${prefix}</td>
+                                <td>${description}</td>
+                                <td>${createTime}</td>
+                                <td style="text-align:center;">
+                                    <a href="javascript:;" onclick="doEdit(${id});"><i class="fa fa-pencil-square-o"></i> 编辑</a>&nbsp;
+                                    <a href="javascript:;" onclick="doDelete(${id});"><i class="fa fa-trash-o"></i> 删除</a>&nbsp;
+                                    <a href="javascript:;" onclick="doCode(${id});"><i class="fa fa-code"></i> 生成代码</a>
+                                </td>
+                            </tr>
+</script>
+
 <script type="application/javascript">
     function doSelectAll() {
         $("input[name='id']:checkbox").each(function(){
@@ -106,7 +122,12 @@
         }
     }
     function doSearch() {
-        ajax_post("/table/query/" + $("select[name='sourceId']").val(), {}, function (json) {}, "GET");
+        ajax_post("/table/query/" + $("select[name='sourceId']").val(), {}, function (json) {
+            $(".x_content tbody").empty();
+            $.each(json.data, function(index, item){
+                $("#demo").tmpl(item).appendTo('.x_content tbody');
+            });
+        }, "GET");
     }
     function doEdit(id) {
         dlg_open("/table/edit?id=" + id, "添加/编辑表");
@@ -132,6 +153,7 @@
 <!-- Bootstrap -->
 <script src="/vendors/bootstrap/js/bootstrap.min.js"></script>
 
+<script src="/vendors/jquery/jquery.tmpl.min.js"></script>
 <script src="/vendors/layer/layer.js"></script>
 
 <!-- Custom Theme Scripts -->
