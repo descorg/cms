@@ -123,10 +123,16 @@ public class TableController {
         return result == null ? R.success("数据已保存") : R.fail(result);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{ids}")
     @ResponseBody
-    public R<String> delete(@PathVariable Integer id) {
-        tableRepository.deleteById(id);
+    public R<String> delete(@PathVariable String ids) {
+        if (ids.indexOf(",") != -1) {
+            for (String id : ids.split(",")) {
+                tableRepository.deleteById(Integer.valueOf(id));
+            }
+        } else {
+            tableRepository.deleteById(Integer.valueOf(ids));
+        }
         return R.success("数据已删除");
     }
 

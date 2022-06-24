@@ -25,7 +25,8 @@
             </div>
 
             <div class="title_right" style="text-align:right;">
-                <button type="button" class="btn btn-success" onclick="doEdit(0);"><i class="fa fa-plus"></i> 添加</button>
+                <button type="button" class="btn btn-success" onclick="doEdit(0);"><i class="fa fa-plus"></i> 添加</button>&nbsp;
+                <button type="button" class="btn btn-danger" onclick="doDeleteAll();"><i class="fa fa-trash-o"></i> 删除所选</button>
             </div>
         </div>
 
@@ -48,19 +49,19 @@
                         <table class="table table-hover table-bordered">
                             <thead>
                             <tr>
-                                <th style="width:40px;">#</th>
+                                <th style="width:80px;text-align:center;"><a href="javascript:;" onclick="doSelectAll();">全选/反选</a></th>
                                 <th style="width:150px;">数据源</th>
                                 <th style="width:300px;">表名</th>
                                 <th style="width:150px;">表前缀</th>
                                 <th>说明</th>
                                 <th style="width:160px;">创建时间</th>
-                                <th style="text-align:center;width:200px;">操作</th>
+                                <th style="width:200px;text-align:center;">操作</th>
                             </tr>
                             </thead>
 
                             <tbody>
                             <tr th:each="item : ${list}">
-                                <th scope="row" th:text="${item.id}">#</th>
+                                <td style="text-align:center;"><input type="checkbox" name="id" th:value="${item.id}"/></td>
                                 <td th:text="${item.sourceId}">#</td>
                                 <td th:text="${item.name}">#</td>
                                 <td th:text="${item.prefix}">#</td>
@@ -87,6 +88,23 @@
 </div>
 
 <script type="application/javascript">
+    function doSelectAll() {
+        $("input[name='id']:checkbox").each(function(){
+            $(this).prop("checked", !$(this).prop("checked"));
+        });
+    }
+    function doDeleteAll() {
+        var ids = [];
+        $("input[name='id']:checkbox").each(function(){
+            if ($(this).prop("checked")) {
+                ids.push($(this).val());
+            }
+        });
+        if (ids.length > 0) {
+            var delIds = ids.join(",");
+            doDelete(delIds);
+        }
+    }
     function doSearch() {
         ajax_post("/table/query/" + $("select[name='sourceId']").val(), {}, function (json) {}, "GET");
     }
