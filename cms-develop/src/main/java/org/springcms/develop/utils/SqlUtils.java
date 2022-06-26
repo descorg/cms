@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import org.springcms.develop.entity.Field;
 import org.springcms.develop.entity.Source;
 import org.springcms.develop.entity.Table;
+import org.springcms.develop.vo.ReptileVO;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
@@ -353,34 +354,60 @@ public class SqlUtils {
         sb = new StringBuffer(sb.substring(0, sb.length()-1));
         sb.append(String.format(") VALUES (%s)", val.substring(0, val.length()-1)));
 
-        for (int i=0; i<size; i++) {
-            Object[] obj = new Object[fieldSize];
-            int index = 0;
-            for (Field field : fieldList) {
-                if (field.getIsPk() != null && field.getIsPk()) {
-                    continue;
-                }
+        int page = 1;
+        do {
+            List<ReptileVO> reptileList = ReptileUtils.eastmoneyList(page);
 
-                if (field.getType().indexOf("char") != -1) {
-                    long length = field.getLength() == null ? 10 : field.getLength();
-                    obj[index] = StringUtils.generateString(length);
-                } else if (field.getType().indexOf("int") != -1 || field.getType().equals("decimal") || field.getType().equals("double")) {
-                    obj[index] = r.nextInt(10)+1;
-                } else if (field.getType().equals("date")) {
-                    obj[index] = String.format("2022-%d-%d", r.nextInt(11) + 1, r.nextInt(30) + 1);
-                } else if (field.getType().equals("time")) {
-                    obj[index] = String.format("%d:%d:%d", r.nextInt(23) + 1, r.nextInt(59) + 1, r.nextInt(59) + 1);
-                } else if (field.getType().equals("datetime") || field.getType().equals("timestamp")) {
-                    obj[index] = String.format("2022-%d-%d %d:%d:%d", r.nextInt(11) + 1, r.nextInt(30) + 1, r.nextInt(23) + 1, r.nextInt(59) + 1, r.nextInt(59) + 1);
-                } else if (field.getType().indexOf("text") != -1) {
-                    long length = field.getLength() == null ? 200 : field.getLength();
-                    obj[index] = StringUtils.generateString(length);
+            for (ReptileVO reptile : reptileList) {
+                Object[] obj = new Object[fieldSize];
+                int index = 0;
+
+                for (Field field : fieldList) {
+                    if (field.getIsPk() != null && field.getIsPk()) {
+                        continue;
+                    }
+
+                    if (field.getName().equals("title")) {
+                        obj[index] = reptile.getTitle();
+                    } else if (field.getName().equals("name")) {
+                        obj[index] = reptile.getName();
+                    } else if (field.getName().equals("keywords")) {
+                        obj[index] = reptile.getKeywords();
+                    } else if (field.getName().equals("description")) {
+                        obj[index] = reptile.getDescription();
+                    } else if (field.getName().equals("thumb")) {
+                        obj[index] = reptile.getImage();
+                    } else if (field.getName().equals("content") || field.getName().equals("body")) {
+                        obj[index] = reptile.getBody();
+                    } else if (field.getName().equals("create_time")) {
+                        obj[index] = reptile.getCreateTime();
+                    } else if (field.getType().indexOf("char") != -1) {
+                        if (field.getLength() != null && field.getLength() < reptile.getTitle().length()) {
+                            obj[index] = reptile.getTitle().substring(0, Integer.valueOf(String.valueOf(field.getLength())));
+                        } else {
+                            obj[index] = reptile.getTitle();
+                        }
+                    } else if (field.getType().indexOf("text") != -1) {
+                        obj[index] = reptile.getBody();
+                    } else if (field.getType().indexOf("int") != -1 || field.getType().equals("decimal") || field.getType().equals("double")) {
+                        obj[index] = r.nextInt(10)+1;
+                    } else if (field.getType().equals("date")) {
+                        obj[index] = String.format("2022-%d-%d", r.nextInt(11) + 1, r.nextInt(30) + 1);
+                    } else if (field.getType().equals("time")) {
+                        obj[index] = String.format("%d:%d:%d", r.nextInt(23) + 1, r.nextInt(59) + 1, r.nextInt(59) + 1);
+                    } else if (field.getType().equals("datetime") || field.getType().equals("timestamp")) {
+                        obj[index] = String.format("2022-%d-%d %d:%d:%d", r.nextInt(11) + 1, r.nextInt(30) + 1, r.nextInt(23) + 1, r.nextInt(59) + 1, r.nextInt(59) + 1);
+                    }
+                    index++;
                 }
-                index++;
+                jdbcTemplate.update(sb.toString(), obj);
             }
 
-            jdbcTemplate.update(sb.toString(), obj);
-        }
+            if (reptileList.size() < 20 || page * 20 >= size) {
+                break;
+            }
+            page++;
+        } while (true);
 
         return true;
     }
