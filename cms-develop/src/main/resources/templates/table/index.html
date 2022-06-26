@@ -26,7 +26,8 @@
 
             <div class="title_right" style="text-align:right;">
                 <button type="button" class="btn btn-success" onclick="doEdit(0);"><i class="fa fa-plus"></i> 添加</button>&nbsp;
-                <button type="button" class="btn btn-danger" onclick="doDeleteAll();"><i class="fa fa-trash-o"></i> 删除所选</button>
+                <button type="button" class="btn btn-danger" onclick="doDeleteAll();"><i class="fa fa-trash-o"></i> 删除所选</button>&nbsp;
+                <button type="button" class="btn btn-warning" onclick="doCreateData();"><i class="fa fa-table"></i> 生成模拟数据</button>
             </div>
         </div>
 
@@ -119,6 +120,24 @@
         if (ids.length > 0) {
             var delIds = ids.join(",");
             doDelete(delIds);
+        }
+    }
+    function doCreateData() {
+        var ids = [];
+        $("input[name='id']:checkbox").each(function(){
+            if ($(this).prop("checked")) {
+                ids.push($(this).val());
+            }
+        });
+        if (ids.length > 0) {
+            var delIds = ids.join(",");
+            ajax_post("/mock/" + delIds, {}, function(json) {
+                if (json.code == 200) {
+                    dlg_info(json.msg);
+                } else {
+                    dlg_error(json.msg);
+                }
+            });
         }
     }
     function doSearch() {

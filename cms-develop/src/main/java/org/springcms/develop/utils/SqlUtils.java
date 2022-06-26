@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class SqlUtils {
 
@@ -312,6 +313,76 @@ public class SqlUtils {
                 return fieldList;
             }
         });
+    }
+
+    /**
+     * 创建模拟数据
+     * @param source
+     * @param table
+     * @param size
+     * @return
+     * @throws Exception
+     */
+    public static Boolean createMockData(Source source, Table table, Integer size) throws Exception {
+        Random r = new Random();
+        DruidDataSource dataSource = getDataSource(source);
+        if (dataSource == null) {
+            throw new Exception("数据源配置有误");
+        }
+        JdbcTemplate jdbcTemplate = getJdbcTemplate(dataSource);
+        if (jdbcTemplate == null) {
+            throw new Exception("创建jdbcTemplate失败");
+        }
+
+        int fieldSize = 0;
+        StringBuffer sb = new StringBuffer();
+        StringBuffer val = new StringBuffer();
+        sb.append(String.format("INSERT INTO %s%s (", table.getPrefix() == null ? "" : table.getPrefix(), table.getName()));
+
+        JSONArray jsonArray = JSONArray.parseArray(table.getFields());
+        List<Field> fieldList = jsonArray.toJavaList(Field.class);
+        for (Field field : fieldList) {
+            if (field.getIsPk() != null && field.getIsPk()) {
+                continue;
+            }
+            sb.append(field.getName()).append(",");
+            val.append("?,");
+            fieldSize++;
+        }
+
+        sb = new StringBuffer(sb.substring(0, sb.length()-1));
+        sb.append(String.format(") VALUES (%s)", val.substring(0, val.length()-1)));
+
+        for (int i=0; i<size; i++) {
+            Object[] obj = new Object[fieldSize];
+            int index = 0;
+            for (Field field : fieldList) {
+                if (field.getIsPk() != null && field.getIsPk()) {
+                    continue;
+                }
+
+                if (field.getType().indexOf("char") != -1) {
+                    long length = field.getLength() == null ? 10 : field.getLength();
+                    obj[index] = StringUtils.generateString(length);
+                } else if (field.getType().indexOf("int") != -1 || field.getType().equals("decimal") || field.getType().equals("double")) {
+                    obj[index] = r.nextInt(10)+1;
+                } else if (field.getType().equals("date")) {
+                    obj[index] = String.format("2022-%d-%d", r.nextInt(11) + 1, r.nextInt(30) + 1);
+                } else if (field.getType().equals("time")) {
+                    obj[index] = String.format("%d:%d:%d", r.nextInt(23) + 1, r.nextInt(59) + 1, r.nextInt(59) + 1);
+                } else if (field.getType().equals("datetime") || field.getType().equals("timestamp")) {
+                    obj[index] = String.format("2022-%d-%d %d:%d:%d", r.nextInt(11) + 1, r.nextInt(30) + 1, r.nextInt(23) + 1, r.nextInt(59) + 1, r.nextInt(59) + 1);
+                } else if (field.getType().indexOf("text") != -1) {
+                    long length = field.getLength() == null ? 200 : field.getLength();
+                    obj[index] = StringUtils.generateString(length);
+                }
+                index++;
+            }
+
+            jdbcTemplate.update(sb.toString(), obj);
+        }
+
+        return true;
     }
 
     public static DruidDataSource getDataSource(Source source) {
