@@ -20,6 +20,12 @@ public class CmsXBaseEntity<K> {
     @TableId(value = "id", type = IdType.AUTO)
     private K id;
 
+    @ApiModelProperty(value = "是否删除", example = "0")
+    private Integer isDeleted;
+
+    @ApiModelProperty(value = "创建者", example = "0")
+    private Integer createUser;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:ii:ss")
     @ApiModelProperty(value = "创建时间", example = "")
     private Date createTime;

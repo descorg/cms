@@ -5,6 +5,7 @@ import org.springcms.develop.entity.Code;
 import org.springcms.develop.entity.Field;
 import org.springcms.develop.entity.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CodeUtils {
@@ -16,6 +17,13 @@ public class CodeUtils {
      * @throws Exception
      */
     public static Boolean generateCode(Table table, Code code) throws Exception {
+        //跳过父类字段
+        List<String> skepField = new ArrayList<>();
+        skepField.add("id");
+        skepField.add("is_deleted");
+        skepField.add("create_user");
+        skepField.add("create_time");
+
         TemplateUtils.process("code/back/BeanConfig.java", String.format("%s/java/%s/config/%sConfig.java", code.getBack(), code.getWrap(), code.getEntity()),
                 code.getWrap(),
                 code.getWrap(), code.getEntity(),
@@ -39,7 +47,7 @@ public class CodeUtils {
             String fieldName = StringUtils.generateClassName(field.getName());
             String property = fieldName.substring(0,1).toLowerCase().concat(fieldName.substring(1));
 
-            if (!field.getName().equalsIgnoreCase("id") && !field.getName().equalsIgnoreCase("create_time")) {
+            if (!skepField.contains(field.getName())) {
                 body.append(String.format("\t@ApiModelProperty(value = \"%s\", example = \"%s\")\n", field.getDescription() == null ? "" : field.getDescription(), field.getValue() == null ? "" : field.getValue()));
 //                body.append(String.format("\t@Column(name = \"%s\")\n", field.getName()));
                 body.append("\t").append("private ").append(dataType2JavaType(field.getType())).append(" ").append(property).append(";\n\n");
