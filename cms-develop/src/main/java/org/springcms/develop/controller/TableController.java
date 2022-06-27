@@ -113,6 +113,45 @@ public class TableController {
     @PostMapping("")
     @ResponseBody
     public R<String> save(@RequestBody Table table) {
+        List<String> fields = new ArrayList<>();
+        JSONArray jsonArray = JSONArray.parseArray(table.getFields());
+        List<Field> fieldList = jsonArray.toJavaList(Field.class);
+
+        for(Field field : fieldList) {
+            fields.add(field.getName());
+        }
+
+        //父类字段
+        if (!fields.contains("is_deleted")) {
+            Field field = new Field();
+            field.setName("is_deleted");
+            field.setType("tinyint");
+            field.setValue("0");
+            field.setIsNull(true);
+            field.setIsPk(false);
+            field.setDescription("是否删除");
+            fieldList.add(field);
+        }
+        if (!fields.contains("create_user")) {
+            Field field = new Field();
+            field.setName("create_user");
+            field.setType("int");
+            field.setIsNull(true);
+            field.setIsPk(false);
+            field.setDescription("创建者");
+            fieldList.add(field);
+        }
+        if (!fields.contains("create_time")) {
+            Field field = new Field();
+            field.setName("create_time");
+            field.setType("datetime");
+            field.setIsNull(true);
+            field.setIsPk(false);
+            field.setDescription("创建时间");
+            fieldList.add(field);
+        }
+
+        table.setFields(JSONArray.toJSONString(fieldList));
         table.setCreateTime(new Date());
         tableRepository.save(table);
 

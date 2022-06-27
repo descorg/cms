@@ -127,4 +127,68 @@ public class ReptileUtils {
         }
         return reptile;
     }
+
+    /**
+     * https://www.51cto.com/
+     * @param page
+     * @return
+     */
+    public static List<ReptileVO> cto(Integer page) {
+        List<ReptileVO> reptileList = new ArrayList<>();
+        String url = String.format("https://developer.51cto.com/p%d.html", page);
+
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Elements divs = doc.getElementsByClass("articleItem");
+            for (Element div : divs) {
+                String title = div.getElementsByClass("article-irl-ct_title").get(0).text().trim();
+                String thumb = div.getElementsByClass("article-irl-img").get(0).getElementsByTag("img").attr("src");
+                String href = div.getElementsByTag("a").get(0).absUrl("href");
+                String time = div.getElementsByClass("article-irl-cb_time").get(0).text();
+
+                ReptileVO reptile = new ReptileVO();
+                reptile.setTitle(title);
+                reptile.setName(title);
+                reptile.setUrl(href);
+                reptile.setImage(thumb);
+                reptile.setCreateTime(time);
+
+                reptileList.add(reptile);
+            }
+
+            for (int i=0; i<reptileList.size(); i++) {
+                reptileList.set(i, ctoInfo(reptileList.get(i)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return reptileList;
+    }
+
+    /**
+     * 获取详情
+     * @param reptile
+     * @return
+     */
+    public static ReptileVO ctoInfo(ReptileVO reptile) {
+        try {
+            Document doc = Jsoup.connect(reptile.getUrl()).get();
+
+            Elements metas = doc.getElementsByTag("meta");
+            for (Element e : metas) {
+                if (e.attr("name").equals("keywords")) {
+                    reptile.setKeywords(e.attr("content"));
+                }
+                if (e.attr("name").equals("description")) {
+                    reptile.setDescription(e.attr("content"));
+                }
+            }
+
+            String body = doc.getElementById("container").html();
+            reptile.setBody(body);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return reptile;
+    }
 }
