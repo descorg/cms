@@ -14,6 +14,7 @@ public class Code {
     @Id
     private Integer id;
 
+    private String module;
     private String entity;
     private String wrap;
     private String back;

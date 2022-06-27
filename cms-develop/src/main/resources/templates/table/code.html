@@ -30,6 +30,12 @@
                 <form id="form2" data-parsley-validate class="form-horizontal form-label-left">
                     <input type="hidden" id="id" name="id" th:value="${code.id}">
                     <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="module">模块名称 <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" id="module" name="module" th:value="${code.module}" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="entity">类名 <span class="required">*</span></label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <input type="text" id="entity" name="entity" th:value="${code.entity}" required="required" class="form-control col-md-7 col-xs-12">
@@ -43,7 +49,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="back" class="control-label col-md-3 col-sm-3 col-xs-12">后端路径 <span class="required">*</span></label>
+                        <label for="back" class="control-label col-md-3 col-sm-3 col-xs-12">后端路径</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <input type="text" id="back" name="back" th:value="${code.back}" class="form-control col-md-7 col-xs-12">
                         </div>
@@ -72,6 +78,7 @@
     function doSave() {
         var data = {
             "id": $("#id").val(),
+            "module": $("#module").val(),
             "entity": $("#entity").val(),
             "wrap": $("#wrap").val(),
             "back": $("#back").val(),

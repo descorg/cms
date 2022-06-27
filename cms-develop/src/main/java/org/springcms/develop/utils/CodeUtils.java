@@ -17,6 +17,17 @@ public class CodeUtils {
      * @throws Exception
      */
     public static Boolean generateCode(Table table, Code code) throws Exception {
+        if (code.getBack() != null && !code.getBack().isEmpty()) {
+            generateCodeBack(table, code);
+        }
+
+        if (code.getFront() != null && !code.getFront().isEmpty()) {
+            generateCodeFront(table, code);
+        }
+
+        return true;
+    }
+    private static void generateCodeBack(Table table, Code code) throws Exception {
         //跳过父类字段
         List<String> skepField = new ArrayList<>();
         skepField.add("id");
@@ -94,8 +105,74 @@ public class CodeUtils {
                 code.getWrap(), code.getEntity(),
                 code.getEntity(), code.getEntity(),
                 code.getEntity(), code.getEntity());
+    }
 
-        return true;
+    /**
+     * 前端 - bladex文件
+     * @return
+     * @throws Exception
+     */
+    private static void generateCodeFront(Table table, Code code) throws Exception {
+        JSONArray jsonArray = JSONArray.parseArray(table.getFields());
+        List<Field> fieldList = jsonArray.toJavaList(Field.class);
+
+        TemplateUtils.process("code/front/bladex/api.js", String.format("%s/bladex/api/%s/%s.js", code.getFront(), removePrefix(code.getModule()), code.getEntity().toLowerCase()),
+                code.getModule(), code.getEntity().toLowerCase(),
+                code.getModule(), code.getEntity().toLowerCase(),
+                code.getModule(), code.getEntity().toLowerCase(),
+                code.getModule(), code.getEntity().toLowerCase(),
+                code.getModule(), code.getEntity().toLowerCase());
+
+        StringBuffer column = new StringBuffer();
+        for (Field field : fieldList) {
+            String fieldName = StringUtils.generateClassName(field.getName());
+            String property = fieldName.substring(0,1).toLowerCase().concat(fieldName.substring(1));
+            if (field.getName().equals("create_time")) {
+                column.append(String.format("            {\n" +
+                        "              label: \"%s\",\n" +
+                        "              search: true,\n" +
+                        "              prop: \"%s\",\n" +
+                        "              type: \"datetime\",\n" +
+                        "              span: 24,\n" +
+                        "              format: \"yyyy-MM-dd hh:mm:ss\",\n" +
+                        "              valueFormat: \"yyyy-MM-dd hh:mm:ss\",\n" +
+                        "              searchRange:true,\n" +
+                        "              addDisplay: false,\n" +
+                        "              editDisplay: false,\n" +
+                        "              search: true,\n" +
+                        "            },\n", field.getDescription(), property));
+            } else {
+                column.append(String.format("            {\n" +
+                        "              label: \"%s\",\n" +
+                        "              prop: \"%s\",\n" +
+                        "              rules: [{\n" +
+                        "                required: true,\n" +
+                        "                message: \"请输入%s\",\n" +
+                        "                trigger: \"blur\"\n" +
+                        "              }]\n" +
+                        "            },\n", field.getDescription(), property, field.getDescription()));
+            }
+        }
+        TemplateUtils.process("code/front/bladex/view.vue", String.format("%s/bladex/views/%s/%s.vue", code.getFront(), removePrefix(code.getModule()), code.getEntity().toLowerCase()),
+                code.getEntity().toLowerCase(),
+                removePrefix(code.getModule()), code.getEntity().toLowerCase(),
+                column.toString(),
+                code.getEntity().toLowerCase(),
+                code.getEntity().toLowerCase(),
+                code.getEntity().toLowerCase(),
+                code.getEntity().toLowerCase());
+    }
+
+    /**
+     * 移除前缀
+     * @param str
+     * @return
+     */
+    public static String removePrefix(String str) {
+        if (str.indexOf("-") != -1) {
+            return str.substring(str.indexOf("-") + 1);
+        }
+        return str;
     }
 
     /**
