@@ -3,6 +3,7 @@ package org.springcms.core.mybatis.base;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +33,6 @@ public class CmsXBaseServiceImpl<M extends CmsXBaseMapper<T, K>, T extends CmsXB
     }
 
     private void resolveEntity(T entity) {
-
+        entity.setCreateTime(new Date());
     }
 }

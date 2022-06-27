@@ -1,20 +1,31 @@
 package org.springcms.core.mybatis.base;
 
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springcms.core.mybatis.response.R;
 import org.springcms.core.mybatis.utils.ApplicationContextUtils;
 import org.springcms.core.mybatis.vo.Query;
+import org.springframework.cglib.beans.BeanMap;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Component
 public class BaseController<T extends CmsXBaseEntity> {
@@ -86,6 +97,74 @@ public class BaseController<T extends CmsXBaseEntity> {
         return R.data(pages);
     }
 
+    @GetMapping("/template")
+    @ApiOperation(value = "模版")
+    public void template(HttpServletResponse response) throws Exception {
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        Class clazz = getEntityType();
+        Constructor constructor = clazz.getConstructor();
+        Map<String, Object> map = beanToMap(constructor.newInstance());
+        mapList.add(map);
+
+        ExcelWriter writer = ExcelUtil.getWriter();
+        writer.write(mapList);
+
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setHeader("Content-Disposition", String.format("attachment;filename=%s.xls", clazz.getSimpleName().toLowerCase()));
+        ServletOutputStream out = response.getOutputStream();
+        writer.flush(out);
+        writer.close();
+    }
+
+    @PostMapping("/import")
+    @ApiOperation(value = "导入")
+    public R<Boolean> imports(@RequestParam("file") MultipartFile file) {
+        String filename = file.getOriginalFilename();
+        if (!filename.endsWith(".xls") && !filename.endsWith(".xlsx")) {
+            return R.fail("只能上传Excel文件");
+        }
+
+        try {
+            CmsXBaseService entityService = getEntityService();
+
+            ExcelReader reader = ExcelUtil.getReader(file.getInputStream());
+            List<T> lists = reader.readAll(getEntityType());
+            reader.close();
+
+            for (T entity : lists) {
+                T tmp = (T)entityService.getOne(getWrapper(entity));
+                if (tmp != null) {
+                    entityService.update(entity, getWrapper(entity));
+                } else {
+                    entityService.save(entity);
+                }
+            }
+            return R.data(true, "ok");
+        } catch (Exception e) {
+            return R.fail(e.getMessage());
+        }
+    }
+
+    @GetMapping("/export")
+    @ApiOperation(value = "导出")
+    public void export(HttpServletResponse response, T entity, Query query,
+                       @ApiParam(name = "format", value = "文件格式：xls、csv、txt", example = "xls", defaultValue = "xls") String format) throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        CmsXBaseService entityService = getEntityService();
+        QueryWrapper queryWrapper = getWrapper(entity);
+        IPage<T> pages = entityService.page(new Page<>(query.getCurrent(), query.getSize()), queryWrapper);
+
+        ExcelWriter writer = ExcelUtil.getWriter();
+        writer.write(pages.getRecords());
+
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setHeader("Content-Disposition", String.format("attachment;filename=%s.xls", sdf.format(new Date())));
+        ServletOutputStream out = response.getOutputStream();
+        writer.flush(out);
+        writer.close();
+    }
+
     /**
      * 获取service
      * @return
@@ -111,6 +190,27 @@ public class BaseController<T extends CmsXBaseEntity> {
     protected Class<T> getEntityType() {
         Class<T> tClass = (Class<T>)((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         return tClass;
+    }
+
+    protected <T> Map<String, Object> beanToMap(T bean) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>(16);
+        if (bean != null) {
+            //使用反射获取对象的类属性
+            Field[] declaredFields = bean.getClass().getDeclaredFields();
+            BeanMap beanMap = BeanMap.create(bean);
+            for (Field field : declaredFields) {
+                //设置成true才能获取注解名
+                field.setAccessible(true);
+                //获取类上注解信息
+                ApiModelProperty annotation = field.getAnnotation(ApiModelProperty.class);
+                if (annotation != null) {
+                    //获取注解绑定的value值
+                    String value = annotation.value();
+                    map.put(value, field.getName());
+                }
+            }
+        }
+        return map;
     }
 
 }
