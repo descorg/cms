@@ -100,11 +100,12 @@ public class BaseController<T extends CmsXBaseEntity> {
     @GetMapping("/template")
     @ApiOperation(value = "模版")
     public void template(HttpServletResponse response) throws Exception {
-        List<Map<String, Object>> mapList = new ArrayList<>();
-
         Class clazz = getEntityType();
         Constructor constructor = clazz.getConstructor();
-        Map<String, Object> map = beanToMap(constructor.newInstance());
+
+        List<Map<String, Object>> mapList = new ArrayList<>();
+//        Map<String, Object> map = beanToMap(constructor.newInstance());
+        Map<String, Object> map = getFields(constructor.newInstance());
         mapList.add(map);
 
         ExcelWriter writer = ExcelUtil.getWriter();
@@ -192,6 +193,12 @@ public class BaseController<T extends CmsXBaseEntity> {
         return tClass;
     }
 
+    /**
+     * 获取实体类中所有属性，包含swagger注释
+     * @param bean
+     * @return
+     * @param <T>
+     */
     protected <T> Map<String, Object> beanToMap(T bean) {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>(16);
         if (bean != null) {
@@ -210,6 +217,23 @@ public class BaseController<T extends CmsXBaseEntity> {
                 }
             }
         }
+        return map;
+    }
+
+    /**
+     * 获取实体类中所有属性
+     * @param bean
+     * @return
+     */
+    protected <T> Map<String, Object> getFields(T bean) {
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>(16);
+
+        //使用反射获取对象的类属性
+        Field[] declaredFields = bean.getClass().getDeclaredFields();
+        for (Field field : declaredFields) {
+            map.put(field.getName(), null);
+        }
+
         return map;
     }
 
