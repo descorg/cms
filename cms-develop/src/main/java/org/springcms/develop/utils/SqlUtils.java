@@ -27,6 +27,7 @@ public class SqlUtils {
      * @return
      */
     public static List<String> generateMySQL(Table table) {
+        List<String> fields = new ArrayList<>();
         StringBuffer sb = new StringBuffer();
 
         sb.append(String.format("DROP TABLE IF EXISTS `%s%s`;", table.getPrefix(), table.getName())).append("\n");
@@ -36,6 +37,7 @@ public class SqlUtils {
         List<Field> fieldList = jsonArray.toJavaList(Field.class);
 
         for(Field field : fieldList) {
+            fields.add(field.getName());
             sb.append(String.format("  `%s` %s", field.getName(), field.getType()));
             if (field.getLength() != null) {
                 if (field.getDecimal() != null) {
@@ -72,6 +74,17 @@ public class SqlUtils {
             sb.append("\n");
         }
 
+        //父类字段
+        if (!fields.contains("is_deleted")) {
+            sb.append("`is_deleted` tinyint(1) DEFAULT '0' COMMENT '是否删除',\n");
+        }
+        if (!fields.contains("create_user")) {
+            sb.append("`create_user` int DEFAULT NULL COMMENT '创建者',\n");
+        }
+        if (!fields.contains("create_time")) {
+            sb.append("create_time datetime NOT NULL COMMENT '创建时间',\n");
+        }
+
         sb = new StringBuffer(sb.substring(0, sb.length() - 2));
         sb.append("\n").append(String.format(") ENGINE = InnoDB CHARACTER SET = utf8 COMMENT = '%s';", table.getDescription())).append("\n");
 
@@ -86,6 +99,7 @@ public class SqlUtils {
      * @return
      */
     public static List<String> generateSqlServer(Table table) {
+        List<String> fields = new ArrayList<>();
         List<String> sqlList = new ArrayList<>();
         StringBuffer sb = new StringBuffer();
 
@@ -100,6 +114,7 @@ public class SqlUtils {
         List<Field> fieldList = jsonArray.toJavaList(Field.class);
 
         for(Field field : fieldList) {
+            fields.add(field.getName());
             sb.append(String.format("  [%s] %s", field.getName(), field.getType()));
 
             if (field.getIsPk()) {
@@ -120,6 +135,17 @@ public class SqlUtils {
             }
 
             sb.append(",\n");
+        }
+
+        //父类字段
+        if (!fields.contains("is_deleted")) {
+            sb.append("[is_deleted] tinyint DEFAULT ((0)) NULL,\n");
+        }
+        if (!fields.contains("create_user")) {
+            sb.append("[create_user] int DEFAULT ((0)) NULL,\n");
+        }
+        if (!fields.contains("create_time")) {
+            sb.append("[create_time] datetime  NOT NULL,\n");
         }
 
         sb = new StringBuffer(sb.substring(0, sb.length() - 2));
