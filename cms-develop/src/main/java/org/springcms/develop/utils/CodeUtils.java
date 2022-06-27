@@ -16,10 +16,11 @@ public class CodeUtils {
      * @throws Exception
      */
     public static Boolean generateCode(Table table, Code code) throws Exception {
-        TemplateUtils.process("code/back/BeanConfig.java", String.format("%s/java/%s/config/BeanConfig.java", code.getBack(), code.getWrap()),
+        TemplateUtils.process("code/back/BeanConfig.java", String.format("%s/java/%s/config/%sConfig.java", code.getBack(), code.getWrap(), code.getEntity()),
                 code.getWrap(),
                 code.getWrap(), code.getEntity(),
                 code.getWrap(), code.getEntity(),
+                code.getEntity(),
                 code.getEntity(), code.getEntity().substring(0,1).toLowerCase().concat(code.getEntity().substring(1)),
                 code.getEntity());
 
@@ -40,6 +41,7 @@ public class CodeUtils {
 
             if (!field.getName().equalsIgnoreCase("id") && !field.getName().equalsIgnoreCase("create_time")) {
                 body.append(String.format("\t@ApiModelProperty(value = \"%s\", example = \"%s\")\n", field.getDescription() == null ? "" : field.getDescription(), field.getValue() == null ? "" : field.getValue()));
+//                body.append(String.format("\t@Column(name = \"%s\")\n", field.getName()));
                 body.append("\t").append("private ").append(dataType2JavaType(field.getType())).append(" ").append(property).append(";\n\n");
             }
 
