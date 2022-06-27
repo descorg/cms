@@ -48,7 +48,10 @@ public class CodeUtils {
             String property = fieldName.substring(0,1).toLowerCase().concat(fieldName.substring(1));
 
             if (!skepField.contains(field.getName())) {
-                body.append(String.format("\t@ApiModelProperty(value = \"%s\", example = \"%s\")\n", field.getDescription() == null ? "" : field.getDescription(), field.getValue() == null ? "" : field.getValue()));
+                body.append(String.format("\t@ApiModelProperty(value = \"%s\", required = %s, example = \"%s\")\n",
+                        field.getDescription() == null ? "" : field.getDescription(),
+                        field.getIsNull() ? "false" : "true",
+                        field.getValue() == null ? "" : field.getValue()));
 //                body.append(String.format("\t@Column(name = \"%s\")\n", field.getName()));
                 body.append("\t").append("private ").append(dataType2JavaType(field.getType())).append(" ").append(property).append(";\n\n");
             }
