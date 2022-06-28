@@ -24,6 +24,9 @@ public class Table {
     @Column(columnDefinition = "text")
     private String fields;
 
+    @Column(columnDefinition = "text")
+    private String summary;
+
     private Date createTime;
 
     @TableField(exist = false)

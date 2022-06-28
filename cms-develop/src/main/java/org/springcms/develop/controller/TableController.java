@@ -3,10 +3,7 @@ package org.springcms.develop.controller;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.fastjson.JSONArray;
 import org.springcms.core.mybatis.response.R;
-import org.springcms.develop.entity.Code;
-import org.springcms.develop.entity.Field;
-import org.springcms.develop.entity.Source;
-import org.springcms.develop.entity.Table;
+import org.springcms.develop.entity.*;
 import org.springcms.develop.repository.CodeRepository;
 import org.springcms.develop.repository.SourceRepository;
 import org.springcms.develop.repository.TableRepository;
@@ -82,15 +79,24 @@ public class TableController {
     @GetMapping("/edit")
     public String edit(Model model, @RequestParam(required = false, defaultValue = "0") Integer id) {
         List<Field> fieldList = new ArrayList<>();
+        List<Summary> summaries = new ArrayList<>();
         Table table;
         if (id > 0 && tableRepository.existsById(id)) {
             table = tableRepository.getOne(id);
-            JSONArray jsonArray = JSONArray.parseArray(table.getFields());
-            fieldList = jsonArray.toJavaList(Field.class);
+            if (table.getSummary() == null) {
+                table.setSummary("[]");
+            }
+
+            JSONArray jsonArray1 = JSONArray.parseArray(table.getFields());
+            fieldList = jsonArray1.toJavaList(Field.class);
+
+            JSONArray jsonArray2 = JSONArray.parseArray(table.getSummary());
+            summaries = jsonArray2.toJavaList(Summary.class);
         } else {
             table = new Table();
         }
         model.addAttribute("fieldList", fieldList);
+        model.addAttribute("summaries", summaries);
         model.addAttribute("table", table);
         model.addAttribute("source", sourceRepository.findAll());
         return "table/edit";
@@ -153,7 +159,7 @@ public class TableController {
 
         table.setFields(JSONArray.toJSONString(fieldList));
         table.setCreateTime(new Date());
-        tableRepository.save(table);
+        table = tableRepository.save(table);
 
         String result = null;
         if (table.getExecute()) {

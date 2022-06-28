@@ -51,6 +51,15 @@
                                           </span>
                             </a>
                         </li>
+                        <li>
+                            <a href="#step-3">
+                                <span class="step_no">3</span>
+                                <span class="step_descr">
+                                              Step 3<br />
+                                              <small>统计汇总</small>
+                                          </span>
+                            </a>
+                        </li>
                     </ul>
                     <div id="step-1">
                         <form id="form1" class="form-horizontal form-label-left">
@@ -167,6 +176,39 @@
                         </form>
                     </div>
 
+                    <div id="step-3">
+                        <form id="form3" class="form-horizontal form-label-left">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <h2>统计汇总 <small></small></h2>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+
+                                        <table id="table3" class="table table-hover table-bordered">
+                                            <thead>
+                                            <tr>
+                                                <th>字段名</th>
+                                                <th style="text-align:center;width:120px;">参与汇总</th>
+                                                <th>关联表</th>
+                                                <th>关联字段</th>
+                                                <th>名称字段</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
                 </div>
                 <!-- End SmartWizard Content -->
             </div>
@@ -216,6 +258,48 @@
                                             </tr>
 </script>
 
+<script id="summary" type="text/x-jquery-tmpl">
+                                            <tr>
+                                                <td>${name}</td>
+                                                <td style="text-align:center;">
+                                                    {{if field==""}}
+                                                    <input type="checkbox" name="isSummary" class="" value="1">
+                                                    {{else}}
+                                                    <input type="checkbox" name="isSummary" checked class="" value="1">
+                                                    {{/if}}
+                                                </td>
+                                                <td>
+                                                    <select name="isJoin" class="form-control" onchange="getFields(this, this.value);">
+                                                        <option value="">选择相关联的表</option>
+                                                        {{each(i,table) tables}}
+                                                        {{if joinTable == table.prefix+table.name}}
+                                                        <option value="${table.prefix}${table.name}" selected>${table.prefix}${table.name}</option>
+                                                        {{else}}
+                                                        <option value="${table.prefix}${table.name}">${table.prefix}${table.name}</option>
+                                                        {{/if}}
+                                                        {{/each}}
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="pkField" class="form-control" onchange="setSummaryChecked(this);">
+                                                        <option value="">选择关联字段</option>
+                                                        {{if joinField != ""}}
+                                                        <option value="${joinField}" selected>${joinField}</option>
+                                                        {{/if}}
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="nameField" class="form-control" onchange="setSummaryChecked(this);">
+                                                        <option value="">选择名称字段</option>
+                                                        {{if nameField != ""}}
+                                                        <option value="${nameField}" selected>${nameField}</option>
+                                                        {{/if}}
+                                                    </select>
+                                                </td>
+                                            </tr>
+
+</script>
+
 <!-- jQuery -->
 <script src="/vendors/jquery/jquery.min.js"></script>
 <!-- Bootstrap -->
@@ -229,11 +313,15 @@
 <script src="/build/js/custom.js"></script>
 <script src="/build/js/common.js"></script>
 
+<script type="application/javascript" th:inline="javascript">
+    var summarieString = [[${table.summary}]];
+</script>
 <script type="application/javascript">
+    var summarieJson = JSON.parse(summarieString);
     $(document).ready(function() {
         $('#wizard').smartWizard({
             onFinish: function() {
-                var fields = [];
+                var fields = [], summary = [];
                 $.each($("#table1 tbody tr"), function(index, item) {
                     json = {
                         id: $(item).find("input[name='id']").val(),
@@ -248,6 +336,19 @@
                     };
                     fields.push(json);
                 });
+
+                $.each($("#table3 tbody tr"), function(index, item){
+                    if ($(item).find("input[name='isSummary']").prop("checked")) {
+                        json = {
+                            field: $($(item).find("td").get(0)).text(),
+                            joinTable: $(item).find("select[name='isJoin']").val(),
+                            joinField: $(item).find("select[name='pkField']").val(),
+                            nameField: $(item).find("select[name='nameField']").val(),
+                        };
+                        summary.push(json);
+                    }
+                });
+
                 var data = {
                     id: $("#form2 input[name='id']").val(),
                     sourceId: $("#sourceId").val(),
@@ -256,6 +357,7 @@
                     description: $("#description").val(),
                     execute: $("#execute").prop("checked"),
                     fields: JSON.stringify(fields),
+                    summary: JSON.stringify(summary),
                 };
                 ajax_post("/table", JSON.stringify(data), function(json) {
                     if (json.code == 200) {
@@ -266,6 +368,33 @@
                         dlg_error(json.msg);
                     }
                 });
+            },
+            onLeaveStep: function(slef, step, context) {
+                if (step.toStep == 2) {
+                    $('.buttonFinish').removeClass("buttonDisabled");
+                } else if (step.toStep == 3) {
+                    var sourceId = $("#sourceId").val();
+                    ajax_post("/table/query/" + sourceId, {}, function (json) {
+                        if (json.code == 200) {
+                            $.each($("#table1 input[name='name']"), function (index, item) {
+                                var arr = {name: $(item).val(), tables:json.data, field:"", joinTable:"", joinField:"", nameField:""};
+                                for (var i=0; i<summarieJson.length; i++) {
+                                    if (summarieJson[i].field == arr.name) {
+                                        arr.field = summarieJson[i].field;
+                                        arr.joinTable = summarieJson[i].joinTable;
+                                        arr.joinField = summarieJson[i].joinField;
+                                        arr.nameField = summarieJson[i].nameField;
+                                        break;
+                                    }
+                                }
+                                $("#summary").tmpl(arr).appendTo('#table3 tbody');
+                            });
+                        } else {
+                            dlg_error(json.msg);
+                        }
+                    }, "GET");
+                }
+                return true;
             }
         });
         $('.buttonNext').addClass('btn btn-success');
@@ -292,6 +421,35 @@
     }
     function doDelete(obj) {
         $(obj).parent().parent().remove();
+    }
+
+    function getFields(tr, table) {
+        tr = $(tr).parent().parent();
+        var sourceId = $("#sourceId").val();
+        ajax_post("/field", {sourceId:sourceId, table:table}, function(json) {
+            if (json.code == 200) {
+                $(tr).find("select[name='pkField']").empty();
+                $(tr).find("select[name='pkField']").append('<option value="">选择关联字段</option>');
+                $(tr).find("select[name='nameField']").empty();
+                $(tr).find("select[name='nameField']").append('<option value="">选择名称字段</option>');
+
+                $.each(json.data, function(index, item){
+                    $(tr).find("select[name='pkField']").append('<option value="' + item.name + '">' + item.name + '</option>');
+                    $(tr).find("select[name='nameField']").append('<option value="' + item.name + '">' + item.name + '</option>');
+                });
+            } else {
+                dlg_error(json.msg);
+            }
+        }, "GET");
+
+    }
+    function setSummaryChecked(tr, selected) {
+        tr = $(tr).parent().parent();
+        if ($(tr).find("select[name='pkField']").val() == "" && $(tr).find("select[name='nameField']").val() == "") {
+            $(tr).find("input[name='isSummary']").prop("checked", false);
+        } else {
+            $(tr).find("input[name='isSummary']").prop("checked", true);
+        }
     }
 </script>
 
