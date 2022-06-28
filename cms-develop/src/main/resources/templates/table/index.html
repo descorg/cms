@@ -88,6 +88,18 @@
     </div>
 </div>
 
+<!-- jQuery -->
+<script src="/vendors/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="/vendors/bootstrap/js/bootstrap.min.js"></script>
+
+<script src="/vendors/jquery/jquery.tmpl.min.js"></script>
+<script src="/vendors/layer/layer.js"></script>
+
+<!-- Custom Theme Scripts -->
+<script src="/build/js/custom.min.js"></script>
+<script src="/build/js/common.js"></script>
+
 <script id="demo" type="text/x-jquery-tmpl">
                             <tr>
                                 <td style="text-align:center;"><input type="checkbox" name="id" value="${id}"/></td>
@@ -104,7 +116,22 @@
                             </tr>
 </script>
 
+<script type="application/javascript" th:inline="javascript">
+    var sources = [[${source}]];
+</script>
+
 <script type="application/javascript">
+    $(document).ready(function() {
+        $.each($(".x_content table tbody tr"), function(index, item){
+            var sourceId = $($(item).find("td").get(1)).text();
+            $.each(sources, function(i, source){
+                if (source.id == sourceId) {
+                    $($(item).find("td").get(1)).text(source.name);
+                }
+            });
+        });
+    });
+
     function doSelectAll() {
         $("input[name='id']:checkbox").each(function(){
             $(this).prop("checked", !$(this).prop("checked"));
@@ -167,16 +194,5 @@
     }
 </script>
 
-<!-- jQuery -->
-<script src="/vendors/jquery/jquery.min.js"></script>
-<!-- Bootstrap -->
-<script src="/vendors/bootstrap/js/bootstrap.min.js"></script>
-
-<script src="/vendors/jquery/jquery.tmpl.min.js"></script>
-<script src="/vendors/layer/layer.js"></script>
-
-<!-- Custom Theme Scripts -->
-<script src="/build/js/custom.min.js"></script>
-<script src="/build/js/common.js"></script>
 </body>
 </html>
