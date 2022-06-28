@@ -124,11 +124,12 @@
     $(document).ready(function() {
         $.each($(".x_content table tbody tr"), function(index, item){
             var sourceId = $($(item).find("td").get(1)).text();
-            $.each(sources, function(i, source){
-                if (source.id == sourceId) {
-                    $($(item).find("td").get(1)).text(source.name);
+            for (i=0; i<sources.length; i++) {
+                if (sources[i].id == sourceId) {
+                    $($(item).find("td").get(1)).text(sources[i].name);
+                    break;
                 }
-            });
+            }
         });
     });
 
