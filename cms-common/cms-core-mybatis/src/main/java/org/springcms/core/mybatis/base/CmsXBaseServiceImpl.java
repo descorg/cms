@@ -33,6 +33,8 @@ public class CmsXBaseServiceImpl<M extends CmsXBaseMapper<T, K>, T extends CmsXB
     }
 
     private void resolveEntity(T entity) {
-        entity.setCreateTime(new Date());
+        if (entity.getCreateTime() == null) {
+            entity.setCreateTime(new Date());
+        }
     }
 }
